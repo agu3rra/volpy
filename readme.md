@@ -15,7 +15,7 @@ Its main goal is to provide sufficiently accurate volume estimates out of terrai
 
 ## Installation
 ```bash
-pip install dempy
+pip install volpy
 ```
 
 ## Usage Examples
@@ -23,35 +23,35 @@ pip install dempy
 ### Pypi package
 
 ```Python
->>> import dempy as dp
->>> dp.demo()
+>>> import volpy as vp
+>>> vp.demo()
 ```
 
 or
 
 ```Python
->>> import dempy as dp
->>> dem = dp.load('survey_data.csv', swell_factor=1.4)
->>> dem.volume()
+>>> import volpy as vp
+>>> vol = vp.load('survey_data.csv', swell_factor=1.4)
+>>> vol.volume()
 '29043.32 cubic meters'
->>> dem.bounds()
+>>> vol.bounds()
 'x=250.13, y=402.14, z=11.54'
->>> dem.level = 5.5
->>> dem.cut_volume()
+>>> vol.level = 5.5
+>>> vol.cut_volume()
 '11503.23 cubic meters'
->>> dem.fill_volume()
+>>> vol.fill_volume()
 '15321.41 cuic meters'
->>> dem.swell_factor = 1.5
->>> dem.volume_curves(step=0.5) # generates a graphic of Cut/fill from the base level to the highest using level steps of 0.5 meters
->>> dem.graph(dp.Graph.TOP)
->>> dem.graph(dp.Graph.PROFILE_XZ)
->>> dem.graph(dp.Graph.PROFILE_YZ)
+>>> vol.swell_factor = 1.5
+>>> vol.volume_curves(step=0.5) # generates a graphic of Cut/fill from the base level to the highest using level steps of 0.5 meters
+>>> vol.graph(dp.Graph.TOP)
+>>> vol.graph(dp.Graph.PROFILE_XZ)
+>>> vol.graph(dp.Graph.PROFILE_YZ)
 ```
 
-By default, dempy applies its calculations on a [Cartesian Coordinate System](https://en.wikipedia.org/wiki/Cartesian_coordinate_system). If you are working with survey data obtained from a [GPS](https://en.wikipedia.org/wiki/Global_Positioning_System), its points are likely represented in a [Geographic Coordinate System](https://en.wikipedia.org/wiki/Geographic_coordinate_system). In order to convert it, use the following modifier when loading the data.
+By default, volpy applies its calculations on a [Cartesian Coordinate System](https://en.wikipedia.org/wiki/Cartesian_coordinate_system). If you are working with survey data obtained from a [GPS](https://en.wikipedia.org/wiki/Global_Positioning_System), its points are likely represented in a [Geographic Coordinate System](https://en.wikipedia.org/wiki/Geographic_coordinate_system). In order to convert it, use the following modifier when loading the data.
 
 ```Python
->>> dp.load('survey_data.csv', coordinates=dp.Coordinates.GPS)
+>>> vp.load('survey_data.csv', coordinates=vp.Coordinates.GPS)
 ```
 
 ### REST API
