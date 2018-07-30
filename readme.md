@@ -1,9 +1,11 @@
+# ATTENTION: Work In Progress...
+This project is currently a work in progress based on my previous project named [Earthworks](https://github.com/agu3rra/earthworks). The idea is to refactor the original code base and to develop it into a full Python PyPI package as well as have some/all of its functionality accessible thru a REST API.
+
+I will remove this section from this readme file once the project is complete and ready to use.
+
+---
+
 # volpy
-
-## ATTENTION: Work In Progress...
-This project is currently a work in progress based on my previous previous project named [Earthworks](https://github.com/agu3rra/earthworks). The idea is to refactor the original code base and to develop it into a full Python PyPI package as well as have some/all of its functionality accessible thru a REST API.
-
-I will remove this section from the readme file once the project is complete and ready to use.
 
 ## Volume Calculations for Digital Elevation Models in Python
 
@@ -20,14 +22,14 @@ pip install volpy
 
 ## Usage Examples
 
-### Pypi package
+### Quick demo
 
 ```Python
 >>> import volpy as vp
 >>> vp.demo()
 ```
 
-or
+### Simple use case
 
 ```Python
 >>> import volpy as vp
@@ -60,7 +62,7 @@ In case you merely want to use this library to calculate volumes and have the ou
 
 ```Python
 import requests
-
+...
 ```
 
 ---
