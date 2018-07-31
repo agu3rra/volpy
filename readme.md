@@ -20,7 +20,7 @@ Its main goal is to provide sufficiently accurate volume estimates out of terrai
 pip install volpy
 ```
 
-## Usage Examples
+## Examples
 
 ### Quick demo
 
@@ -116,8 +116,11 @@ where `(xo,yo,zo)` can be any one of the 3 A, B or C points from the plane.
 Given the plane equation, we can isolate z and obtain a `z=f(x,y)` function on top of which the double integral is applyed in order to calculate the volume beneath the triangular plane down until the plane perpendicular to the XY axis that passes by the lowest elevation coordinate (z) of the survey.  
 ![Picture here]()
 
-The double integral limits are determined by...  
-**... continue from here.**
+The volume of each individual triangle is obtained by the sum of 2 double integrals. So for a triangle with vertices ABC and its plane determined by `z=f(x,y)` the double integral limits for a single triangular area are determined as follows:  
+![vol_triABC](images/Vol_triABC.jpg)  
+![gif image of rotating ABC triangle and annotations]()
+
+**... continue from here. Check notes on Evernote.**
 
 ### Extra pre-step: From GPS to Cartesian.
 In the event of the [terrain survey](###-Terrain-survey) being executed thru a GPS device (a quite common case) an extra step is required prior to applying the volume calculation: [map projection](https://en.wikipedia.org/wiki/Map_projection).
