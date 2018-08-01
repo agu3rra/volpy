@@ -62,7 +62,11 @@ In case you merely want to use this library to calculate volumes and have the ou
 
 ```Python
 import requests
-...
+base_url = ""
+
+# What to use of authentication?
+# POST request to obtain session token
+# POST request to obtain data. Describe json format of expected values and response json data
 ```
 
 ---
@@ -110,17 +114,15 @@ The plane equation `z=f(x,y)` representing the triangular plane is obtained for 
 > p*(x-xo) + q*(y-yo) + r*(z-zo) = 0
 
 where `(xo,yo,zo)` can be any one of the 3 A, B or C points from the plane.  
-![Picture here]()
+![Picture of points ABC on triangular plane and orthogonal vector]()
 
 ### Step 3: From triangles and planes to a sum of volumes
 Given the plane equation, we can isolate z and obtain a `z=f(x,y)` function on top of which the double integral is applyed in order to calculate the volume beneath the triangular plane down until the plane perpendicular to the XY axis that passes by the lowest elevation coordinate (z) of the survey.  
-![Picture here]()
+![Picture of mesh grid]()
 
 The volume of each individual triangle is obtained by the sum of 2 double integrals. So for a triangle with vertices ABC and its plane determined by `z=f(x,y)` the double integral limits for a single triangular area are determined as follows:  
 ![vol_triABC](images/Vol_triABC.jpg)  
 ![gif image of rotating ABC triangle and annotations]()
-
-**... continue from here. Check notes on Evernote.**
 
 ### Extra pre-step: From GPS to Cartesian.
 In the event of the [terrain survey](###-Terrain-survey) being executed thru a GPS device (a quite common case) an extra step is required prior to applying the volume calculation: [map projection](https://en.wikipedia.org/wiki/Map_projection).
