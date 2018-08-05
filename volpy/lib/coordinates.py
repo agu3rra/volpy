@@ -3,9 +3,9 @@ import utm
 
 class GeographicCoordinate():
     def __init__(self, latitude, longitude, elevation):
-        super().__init__(elevation)
         self.latitude = latitude
         self.longitude = longitude
+        self.elevation = elevation # above sea level
 
 class UtmCoordinate():
     def __init__(self, northing, easting, zone_number, zone_letter, elevation):
@@ -22,7 +22,7 @@ class UtmCoordinate():
             latitude,
             longitude)
         return cls(northing, easting, zone_number, zone_letter, elevation)
-        
+
 class CartesianCoordinate():
     """
     Classical cartesian coordinate system with x, y, z axes.
