@@ -2,6 +2,15 @@ import pandas as pd
 from enum import Enum
 from xml.dom.minidom import parse
 
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib import rcParams
+rcParams.update({'figure.autolayout': True,
+                 'axes.titlepad': 20})
+
+import bokeh
+from bokeh.plotting import figure, show, output_file
+from bokeh.models import HoverTool, BoxSelectTool, PrintfTickFormatter
 
 class GpsDevice(Enum):
     """ An enumeration of known GPS devices. """
@@ -39,6 +48,8 @@ class GpsSurvey(object):
         """
         time_to_survey = self.data.index.max()-self.data.index.min()
         print("Time taken for survey completion: {}".format(time_to_survey))
+        print("Points collected: {}".format(self.data.shape[0]))
+        print("Elevation average: {}".format(self.data['elevation'].mean()))
 
         self._stats_print('elevation', 'meters')
         self._stats_print('latitude', 'degrees')
@@ -100,3 +111,36 @@ class GpsSurvey(object):
                 columns=column_names,
                 index="timestamp")
         return None
+    
+    def view_path_elevation_bokeh(self):
+        """
+        Plots the path elevation vs. timestamp
+        """
+        TOOLS = [BoxSelectTool(), HoverTool()]
+        plot = figure(title="Survey Path Elevation", tools = TOOLS)
+        plot.line(
+            self.data.index,
+            self.data['elevation'],
+            line_color="SteelBlue",
+            line_dash="dotdash",
+            line_width=4)
+        plot.xaxis.axis_label = 'Timestamp'
+        plot.yaxis.axis_label = 'Elevation (m)'
+        plot.yaxis[0].formatter = PrintfTickFormatter(format="%d")
+
+        output_file("SurveyPathElevation.html",
+                    title="Elevation Vs. Survey Path")
+        show(plot)
+    
+    def view_path_elevation_matplotlib(self):
+        profile = self.data['elevation']
+        fig = plt.figure()
+        subplot = fig.add_subplot(1, 1, 1)
+        profile.plot(ax=subplot, rot=45, grid=True)
+        subplot.set_xlabel = "Timestamp"
+        subplot.set_ylabel = "Elevation (m)"
+        subplot.set_title = "Elevation Vs. Survey Path"
+        fig.show()
+
+    def view_path_elevation_plotly(self):
+        pass
