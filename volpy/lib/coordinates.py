@@ -1,5 +1,11 @@
 # Defines the different types of coordinates that application can work with
 import utm
+from enum import Enum
+
+class CoordinateSystem(Enum):
+    GEOGRAPHIC = 0
+    UTM = 1
+    CARTESIAN = 2
 
 class GeographicCoordinate():
     def __init__(self, latitude, longitude, elevation):

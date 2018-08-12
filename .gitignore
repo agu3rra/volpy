@@ -1,5 +1,6 @@
 .vscode/
 *.DS_Store
 *__pycache__/
-*.ipynb
+*.pytest_cache/
+*.ipynb_checkpoints/
 *.html
