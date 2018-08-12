@@ -117,7 +117,7 @@ where `(xo,yo,zo)` can be any one of the 3 A, B or C points from the plane.
 ![Picture of points ABC on triangular plane and orthogonal vector]()
 
 ### Step 3: From triangles and planes to a sum of volumes
-Given the plane equation, we can isolate z and obtain a `z=f(x,y)` function on top of which the double integral is applyed in order to calculate the volume beneath the triangular plane down until the plane perpendicular to the XY axis that passes by the lowest elevation coordinate (z) of the survey.  
+Given the plane equation, we can isolate z and obtain a `z=f(x,y)` function on top of which the double integral is applied in order to calculate the volume beneath the triangular plane down until the plane perpendicular to the XY axis that passes by the lowest elevation coordinate (z) of the survey.  
 ![Picture of mesh grid]()
 
 The volume of each individual triangle is obtained by the sum of 2 double integrals. So for a triangle with vertices ABC and its plane determined by `z=f(x,y)` the double integral limits for a single triangular area are determined as follows:  
@@ -127,4 +127,4 @@ The volume of each individual triangle is obtained by the sum of 2 double integr
 ### Extra pre-step: From GPS to Cartesian.
 In the event of the [terrain survey](###-Terrain-survey) being executed thru a GPS device (a quite common case) an extra step is required prior to applying the volume calculation: [map projection](https://en.wikipedia.org/wiki/Map_projection).
 
-For the purpose of this project the [Universal Traverse Mercator](https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system) was used to convert from GPS coordinates (latitude, longitude, elevation) to a Cartesian coodinate system which is expected by the algorithm in [step 1](###-Step-1:-From-points-to-triangles).
+For the purpose of this project the [Universal Traverse Mercator](https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system) was used to convert from GPS coordinates (latitude, longitude, elevation) to a Cartesian coordinate system which is expected by the algorithm in [step 1](###-Step-1:-From-points-to-triangles).

@@ -9,7 +9,7 @@ class Survey():
     """
     The survey class is the starting point of this library
     Its data source is expected to represent a collection of points within a
-    cartesian coordinate system
+    cartesian coordinate system.
     """
 
     def __init__(
@@ -94,7 +94,7 @@ class Survey():
                         utm.easting,
                         utm.zone_letter,
                         utm.zone_number,
-                        elevation)
+                        utm.elevation)
                 points.append(entry)
             except Exception as exception:
                 print(exception)
@@ -103,7 +103,7 @@ class Survey():
         column_names = ["timestamp",
                         "latitude",
                         "longitude",
-                        "northing"
+                        "northing",
                         "easting",
                         "zone_letter",
                         "zone_number",
@@ -111,3 +111,8 @@ class Survey():
         return pd.DataFrame.from_records(points,
                                          columns=column_names,
                                          index="timestamp")
+    def _read_csv(self):
+        pass
+
+    def _read_excel(self):
+        pass
