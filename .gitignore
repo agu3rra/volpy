@@ -4,3 +4,4 @@
 *.pytest_cache/
 *.ipynb_checkpoints/
 *.html
+*.pyc

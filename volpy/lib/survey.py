@@ -28,8 +28,8 @@ class Survey():
         """
 
         # Validate if extension is supported.
-        (filename, extension) = os.path.splitext(source)
-        accepted_extensions = set(['.xlsx','.xls','.gpx','.csv'])
+        (_, extension) = os.path.splitext(source)
+        accepted_extensions = set(['.xlsx','.xls','.gpx','.csv', '.txt'])
         extension = extension.lower()
         if extension not in accepted_extensions:
             raise TypeError(
@@ -39,14 +39,48 @@ class Survey():
         self.name = name
         self.source = source
         self.coordinate_system = coordinate_system
+        
+        # expected column names and data types in pandas
+        self._column_names = {"timestamp": "datetime64",
+                              "latitude": "float64",
+                              "longitude": "float64",
+                              "northing": "float64",
+                              "easting": "float64",
+                              "zone_letter": "object",
+                              "zone_number": "float64",
+                              "elevation": "float64"}
+
         if extension == '.gpx':
             self.data = self._read_gpx()
-        elif extension == '.csv':
+        elif (extension == '.csv') or (extension == '.txt'):
             self.data = self._read_csv()
         elif (extension == '.xlsx') or (extension == '.xls'): # MS Excel
             self.data = self._read_excel()
         else:
             raise IOError("Error while parsing supported file extension.")
+
+    def _pdSeries_conversion(self, series, to):
+        """Converts a pandas series to a different dtype
+        
+        Arguments:
+        series: the input pandas series to be converted
+        to: the desired data type to convert to in pandas.
+            e.g.: float64, object, datetime64
+
+        Returns a pandas Series
+        """
+        try:
+            if to == "float64":
+                return pd.to_numeric(series)
+            elif to == "datetime64":
+                return pd.to_datetime(series)
+            elif to == "object":
+                return series.to_string()
+            else:
+                raise TypeError("Unexpected convertion to value.")
+        except Exception as exception:
+            print(exception)
+            raise exception
 
     def _read_gpx(self):
         """Parses an xml file containing GPS data
@@ -100,19 +134,33 @@ class Survey():
                 print(exception)
 
         # Generate DataFrame
-        column_names = ["timestamp",
-                        "latitude",
-                        "longitude",
-                        "northing",
-                        "easting",
-                        "zone_letter",
-                        "zone_number",
-                        "elevation"]
         return pd.DataFrame.from_records(points,
-                                         columns=column_names,
+                                         columns=self._column_names,
                                          index="timestamp")
+                                         
     def _read_csv(self):
-        pass
+        try:
+            contents = pd.read_csv(self.source)
+
+            # Verify expected column names
+            for item in self._column_names:
+                if item not in contents.columns:
+                    raise IOError("Unexpected column name. Expected:{}"\
+                    .format(self._column_names))
+
+            # Convertion to desired dtypes:
+            # RESUME HERE Error during string conversion.
+            # VERIFY THAT conversion from GPX and CSV return equal dtypes thru test cases
+            for column in contents.columns:
+                expected_type = self._column_names[column]
+                contents[column] = self._pdSeries_conversion(contents[column],
+                                                             expected_type)
+            
+            contents = contents.set_index('timestamp')
+            return contents
+        except Exception as exception:
+            print(exception)
+            raise exception
 
     def _read_excel(self):
-        pass
+        return True
