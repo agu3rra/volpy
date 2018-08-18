@@ -14,6 +14,7 @@ test_cases = (('source', 'entries', 'expected'),
             ('survey_ibema_faxinal.gpx', 155, 880.68),
             ('survey_ibema_faxinal_corrupt.gpx', 152, 878.91),
             ('survey_ibema_faxinal.csv', 155, 880.68),
+            ('survey_ibema_faxinal.txt', 155, 880.68),
         ])
 
 def verify_survey_dtypes(survey):
@@ -54,6 +55,9 @@ test_cases = (('source', 'error_type'),
             ('survey_ibema_faxinal_invalidColumn.csv', ValueError),
             ('survey_ibema_faxinal_noHeader.csv', ValueError),
             ('survey_ibema_faxinal_WrongValue.csv', ValueError),
+            ('survey_ibema_faxinal_invalidColumn.txt', ValueError),
+            ('survey_ibema_faxinal_noHeader.txt', ValueError),
+            ('survey_ibema_faxinal_WrongValue.txt', ValueError),
         ])
 
 @pytest.mark.parametrize(*test_cases)
