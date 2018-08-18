@@ -47,7 +47,7 @@ class Survey():
                               "northing": "float64",
                               "easting": "float64",
                               "zone_letter": "object",
-                              "zone_number": "float64",
+                              "zone_number": "int64",
                               "elevation": "float64"}
 
         if extension == '.gpx':
@@ -57,7 +57,7 @@ class Survey():
         elif (extension == '.xlsx') or (extension == '.xls'): # MS Excel
             self.data = self._read_excel()
         else:
-            raise IOError("Error while parsing supported file extension.")
+            raise ValueError("Error while parsing supported file extension.")
 
     def _pdSeries_conversion(self, series, to):
         """Converts a pandas series to a different dtype
@@ -70,14 +70,14 @@ class Survey():
         Returns a pandas Series
         """
         try:
-            if to == "float64":
+            if (to == "float64" or to == "int64"):
                 return pd.to_numeric(series)
             elif to == "datetime64":
                 return pd.to_datetime(series)
             elif to == "object":
                 return series.to_string()
             else:
-                raise TypeError("Unexpected convertion to value.")
+                raise TypeError("Unexpected type convertion.")
         except Exception as exception:
             print(exception)
             raise exception
@@ -94,7 +94,7 @@ class Survey():
         collection = parse(self.source).documentElement
         track_points = collection.getElementsByTagName("trkpt")
         if len(track_points) == 0:
-            raise IOError("Unexpected trackpoint tag on XML file")
+            raise ValueError("Unexpected trackpoint tag on XML file")
         points = []
 
         for point in track_points:
@@ -110,7 +110,7 @@ class Survey():
                 not longitude or
                 not elevation or
                 not timestamp):
-                raise IOError("Unexpected tag for lat/lon/ele/time.")
+                raise ValueError("Unexpected tag for lat/lon/ele/time.")
 
             try:
                 latitude = pd.to_numeric(latitude)
@@ -145,12 +145,10 @@ class Survey():
             # Verify expected column names
             for item in self._column_names:
                 if item not in contents.columns:
-                    raise IOError("Unexpected column name. Expected:{}"\
+                    raise ValueError("Unexpected column name. Expected:{}"\
                     .format(self._column_names))
 
             # Convertion to desired dtypes:
-            # RESUME HERE Error during string conversion.
-            # VERIFY THAT conversion from GPX and CSV return equal dtypes thru test cases
             for column in contents.columns:
                 expected_type = self._column_names[column]
                 contents[column] = self._pdSeries_conversion(contents[column],
