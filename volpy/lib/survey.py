@@ -49,29 +49,6 @@ class Survey():
         else:
             raise ValueError("Error while parsing supported file extension.")
 
-    def _pdSeries_conversion(self, series, to):
-        """Converts a pandas series to a different dtype
-        
-        Arguments:
-        series: the input pandas series to be converted
-        to: the desired data type to convert to in pandas.
-            e.g.: float64, object, datetime64
-
-        Returns a pandas Series
-        """
-        try:
-            if (to == "float64" or to == "int64"):
-                return pd.to_numeric(series)
-            elif to == "datetime64":
-                return pd.to_datetime(series)
-            elif to == "object":
-                return series.to_string()
-            else:
-                raise TypeError("Unexpected type convertion.")
-        except Exception as exception:
-            print(exception)
-            raise exception
-
     def _read_gpx(self):
         """Parses an xml file containing GPS data
         Data points are assumed to be in a Geographic coordinate system
@@ -136,30 +113,41 @@ class Survey():
 
         if self.coordinate_system == CoordinateSystem.GEOGRAPHIC:
             try:
-                contents = pd.read_csv(self.source)
+                data = pd.read_csv(self.source)
                 
-                #if contents.shape[1]!=4:
-                 #   raise ValueError("Unexpected number of columns")
-
-                # implement reading only time/lat/long/ele as in gpx
-                # implement cartesian from the get go. Should have draw it working before implementing it :) All import types should return cartesian.
-                # attributes: survey.data = timestamp,x,y,z
+                if data.shape[1] != 3:
+                    raise ValueError("Unexpected number of columns")
 
                 # Verify expected column names
-                for item in self._column_names:
-                    if item not in contents.columns:
+                expected_columns = ['latitude', 'longitude', 'elevation']
+                for item in data.columns:
+                    if item not in expected_columns:
                         raise ValueError("Unexpected column name. Expected:{}"\
-                        .format(self._column_names))
+                        .format(expected_columns))
 
-                # Convertion to desired dtypes:
-                for column in contents.columns:
-                    expected_type = self._column_names[column]
-                    contents[column] = self._pdSeries_conversion(
-                        contents[column],
-                        expected_type)
+                # Convertion to numeric:
+                for column in data.columns:
+                    data[column] = pd.to_numeric(data[column])
                 
-                # contents = contents.set_index('timestamp')
-                return contents
+                breakpoint()
+
+                # Generate UTM and then Cartesian
+                # CONTINUE HERE - Error: Find out how to do multiple pandas assignment
+                data['northing'],
+                data['easting'],
+                data['zone_number'],
+                data['zone_letter'],
+                data['elevation'] = UtmCoordinate.create_from_geographic(
+                    data['latitude'],
+                    data['longitude'],
+                    data['elevation']
+                )
+                data['x'] = data['easting'] - data['easting'].min()
+                data['y'] = data['northing'] - data['northing'].min()
+                data['z'] = data['elevation'] - data['elevation'].min()
+                selection = ['x', 'y', 'z', 'elevation']
+                return data[selection]
+
             except Exception as exception:
                 print(exception)
                 raise exception
