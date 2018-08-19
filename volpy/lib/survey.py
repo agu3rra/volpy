@@ -40,16 +40,6 @@ class Survey():
         self.source = source
         self.coordinate_system = coordinate_system
         
-        # expected column names and data types in pandas
-        self._column_names = {"timestamp": "datetime64",
-                              "latitude": "float64",
-                              "longitude": "float64",
-                              "northing": "float64",
-                              "easting": "float64",
-                              "zone_letter": "object",
-                              "zone_number": "int64",
-                              "elevation": "float64"}
-
         if extension == '.gpx':
             self.data = self._read_gpx()
         elif (extension == '.csv') or (extension == '.txt'):
@@ -103,14 +93,11 @@ class Survey():
             longitude = point.getAttribute("lon")
             elevation = point.getElementsByTagName('ele')[0]\
                 .childNodes[0].data
-            timestamp = point.getElementsByTagName('time')[0]\
-                .childNodes[0].data
 
             if (not latitude or
                 not longitude or
-                not elevation or
-                not timestamp):
-                raise ValueError("Unexpected tag for lat/lon/ele/time.")
+                not elevation):
+                raise ValueError("Unexpected tag for lat/lon/ele.")
 
             try:
                 latitude = pd.to_numeric(latitude)
@@ -120,45 +107,68 @@ class Survey():
                     latitude,
                     longitude,
                     elevation)
-                timestamp = pd.to_datetime(timestamp)
-                entry = (timestamp,
-                        latitude,
+                entry = (latitude,
                         longitude,
+                        utm.elevation,
                         utm.northing,
-                        utm.easting,
-                        utm.zone_letter,
-                        utm.zone_number,
-                        utm.elevation)
+                        utm.easting)
                 points.append(entry)
             except Exception as exception:
-                print(exception)
+                raise exception
 
         # Generate DataFrame
-        return pd.DataFrame.from_records(points,
-                                         columns=self._column_names,
-                                         index="timestamp")
+        columns = ['latitude',
+                   'longitude',
+                   'elevation',
+                   'northing',
+                   'easting']
+        data = pd.DataFrame.from_records(points,
+                                         columns=columns)
+
+        # Generate x, y, z
+        data['x'] = data['easting'] - data['easting'].min()
+        data['y'] = data['northing'] - data['northing'].min()
+        data['z'] = data['elevation'] - data['elevation'].min()
+        selection = ['x', 'y', 'z', 'elevation']
+        return data[selection]
                                          
     def _read_csv(self):
-        try:
-            contents = pd.read_csv(self.source)
 
-            # Verify expected column names
-            for item in self._column_names:
-                if item not in contents.columns:
-                    raise ValueError("Unexpected column name. Expected:{}"\
-                    .format(self._column_names))
+        if self.coordinate_system == CoordinateSystem.GEOGRAPHIC:
+            try:
+                contents = pd.read_csv(self.source)
+                
+                #if contents.shape[1]!=4:
+                 #   raise ValueError("Unexpected number of columns")
 
-            # Convertion to desired dtypes:
-            for column in contents.columns:
-                expected_type = self._column_names[column]
-                contents[column] = self._pdSeries_conversion(contents[column],
-                                                             expected_type)
-            
-            contents = contents.set_index('timestamp')
-            return contents
-        except Exception as exception:
-            print(exception)
-            raise exception
+                # implement reading only time/lat/long/ele as in gpx
+                # implement cartesian from the get go. Should have draw it working before implementing it :) All import types should return cartesian.
+                # attributes: survey.data = timestamp,x,y,z
+
+                # Verify expected column names
+                for item in self._column_names:
+                    if item not in contents.columns:
+                        raise ValueError("Unexpected column name. Expected:{}"\
+                        .format(self._column_names))
+
+                # Convertion to desired dtypes:
+                for column in contents.columns:
+                    expected_type = self._column_names[column]
+                    contents[column] = self._pdSeries_conversion(
+                        contents[column],
+                        expected_type)
+                
+                # contents = contents.set_index('timestamp')
+                return contents
+            except Exception as exception:
+                print(exception)
+                raise exception
+
+        if self.coordinate_system == CoordinateSystem.CARTESIAN:
+            pass
+
+        if self.coordinate_system == CoordinateSystem.UTM:
+            pass
 
     def _read_excel(self):
         return True

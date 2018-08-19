@@ -1,5 +1,5 @@
 # python -m pytest test_survey.py
-# python -m pytest
+# python -m pytest --verbose
 import pytest
 import pandas as pd
 import sys
@@ -12,9 +12,12 @@ sample_directory = '../sample_data/'
 test_cases = (('source', 'entries', 'expected'),
         [
             ('survey_ibema_faxinal.gpx', 155, 880.68),
-            ('survey_ibema_faxinal_corrupt.gpx', 152, 878.91),
-            ('survey_ibema_faxinal.csv', 155, 880.68),
-            ('survey_ibema_faxinal.txt', 155, 880.68),
+            ('survey_ibema_faxinal_Geographic.csv', 155, 880.68),
+            ('survey_ibema_faxinal_UTM.csv', 155, 880.68),
+            ('survey_ibema_faxinal_Cartesian.csv', 155, 880.68),
+            ('survey_ibema_faxinal_Geographic.txt', 155, 880.68),
+            ('survey_ibema_faxinal_UTM.txt', 155, 880.68),
+            ('survey_ibema_faxinal_Cartesian.txt', 155, 880.68),
         ])
 
 def verify_survey_dtypes(survey):
@@ -26,38 +29,44 @@ def verify_survey_dtypes(survey):
 
     Returns True on match and False otherwise
     """
-    index_type = type(survey.data.index)
     actual_column_types = survey.data.dtypes
-
-    if index_type != pd.core.indexes.datetimes.DatetimeIndex:
-        return False
-
     for column in survey.data.columns:
-        expected_type = survey._column_names[column]
-        if expected_type != actual_column_types[column]:
+        if actual_column_types[column] != 'float64':
             return False
-
     return True
 
 @pytest.mark.parametrize(*test_cases)
 def test_successful_import(source, entries, expected):
         survey = Survey(sample_directory + source, 'Test survey')
         assert survey.data.shape[0] == entries
-        assert survey.data.iloc[3,6] == expected
+        assert survey.data.iloc[3,3] == expected # elevation info
         assert verify_survey_dtypes(survey) == True
 
 # Expected import error tests
 test_cases = (('source', 'error_type'),
         [
             ('invalid_source_format.bla', TypeError),
+            ('survey_ibema_faxinal_corrupt.gpx', ValueError),
             ('survey_ibema_faxinal_unexpectedLat.gpx', ValueError),
             ('survey_ibema_faxinal_unexpectedTrackPoint.gpx', ValueError),
-            ('survey_ibema_faxinal_invalidColumn.csv', ValueError),
-            ('survey_ibema_faxinal_noHeader.csv', ValueError),
-            ('survey_ibema_faxinal_WrongValue.csv', ValueError),
-            ('survey_ibema_faxinal_invalidColumn.txt', ValueError),
-            ('survey_ibema_faxinal_noHeader.txt', ValueError),
-            ('survey_ibema_faxinal_WrongValue.txt', ValueError),
+            ('survey_ibema_faxinal_Cartesian_invalid_column.csv', ValueError),
+            ('survey_ibema_faxinal_Cartesian_no_header.csv', ValueError),
+            ('survey_ibema_faxinal_Cartesian_wrong_entry.csv', ValueError),
+            ('survey_ibema_faxinal_Cartesian_invalid_column.txt', ValueError),
+            ('survey_ibema_faxinal_Cartesian_no_header.txt', ValueError),
+            ('survey_ibema_faxinal_Cartesian_wrong_entry.txt', ValueError),
+            ('survey_ibema_faxinal_Geographic_invalid_column.csv', ValueError),
+            ('survey_ibema_faxinal_Geographic_no_header.csv', ValueError),
+            ('survey_ibema_faxinal_Geographic_wrong_entry.csv', ValueError),
+            ('survey_ibema_faxinal_Geographic_invalid_column.txt', ValueError),
+            ('survey_ibema_faxinal_Geographic_no_header.txt', ValueError),
+            ('survey_ibema_faxinal_Geographic_wrong_entry.txt', ValueError),
+            ('survey_ibema_faxinal_UTM_invalid_column.csv', ValueError),
+            ('survey_ibema_faxinal_UTM_no_header.csv', ValueError),
+            ('survey_ibema_faxinal_UTM_wrong_entry.csv', ValueError),
+            ('survey_ibema_faxinal_UTM_invalid_column.txt', ValueError),
+            ('survey_ibema_faxinal_UTM_no_header.txt', ValueError),
+            ('survey_ibema_faxinal_UTM_wrong_entry.txt', ValueError),
         ])
 
 @pytest.mark.parametrize(*test_cases)
