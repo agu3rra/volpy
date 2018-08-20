@@ -47,34 +47,34 @@ def test_successful_import(source, entries, expected, coordinate_system):
         assert verify_survey_dtypes(survey) == True
 
 # Expected import error tests
-test_cases = (('source', 'error_type'),
-        [
-            ('invalid_source_format.bla', TypeError),
-            ('survey_ibema_faxinal_corrupt.gpx', ValueError),
-            ('survey_ibema_faxinal_unexpectedLat.gpx', ValueError),
-            ('survey_ibema_faxinal_unexpectedTrackPoint.gpx', ValueError),
-            ('survey_ibema_faxinal_Cartesian_invalid_column.csv', ValueError),
-            ('survey_ibema_faxinal_Cartesian_no_header.csv', ValueError),
-            ('survey_ibema_faxinal_Cartesian_wrong_entry.csv', ValueError),
-            ('survey_ibema_faxinal_Cartesian_invalid_column.txt', ValueError),
-            ('survey_ibema_faxinal_Cartesian_no_header.txt', ValueError),
-            ('survey_ibema_faxinal_Cartesian_wrong_entry.txt', ValueError),
-            ('survey_ibema_faxinal_Geographic_invalid_column.csv', ValueError),
-            ('survey_ibema_faxinal_Geographic_no_header.csv', ValueError),
-            ('survey_ibema_faxinal_Geographic_wrong_entry.csv', ValueError),
-            ('survey_ibema_faxinal_Geographic_invalid_column.txt', ValueError),
-            ('survey_ibema_faxinal_Geographic_no_header.txt', ValueError),
-            ('survey_ibema_faxinal_Geographic_wrong_entry.txt', ValueError),
-            ('survey_ibema_faxinal_UTM_invalid_column.csv', ValueError),
-            ('survey_ibema_faxinal_UTM_no_header.csv', ValueError),
-            ('survey_ibema_faxinal_UTM_wrong_entry.csv', ValueError),
-            ('survey_ibema_faxinal_UTM_invalid_column.txt', ValueError),
-            ('survey_ibema_faxinal_UTM_no_header.txt', ValueError),
-            ('survey_ibema_faxinal_UTM_wrong_entry.txt', ValueError),
-        ])
+test_cases = (('source', 'error_type', 'coordinate_system'),
+[
+('invalid_source_format.bla', TypeError, CoordinateSystem.CARTESIAN),
+('survey_ibema_faxinal_corrupt.gpx', ValueError, CoordinateSystem.GEOGRAPHIC),
+('survey_ibema_faxinal_unexpectedLat.gpx', ValueError, CoordinateSystem.GEOGRAPHIC),
+('survey_ibema_faxinal_unexpectedTrackPoint.gpx', ValueError, CoordinateSystem.GEOGRAPHIC),
+('survey_ibema_faxinal_Cartesian_invalid_column.csv', ValueError, CoordinateSystem.CARTESIAN),
+('survey_ibema_faxinal_Cartesian_no_header.csv', ValueError, CoordinateSystem.CARTESIAN),
+('survey_ibema_faxinal_Cartesian_wrong_entry.csv', ValueError, CoordinateSystem.CARTESIAN),
+('survey_ibema_faxinal_Cartesian_invalid_column.txt', ValueError, CoordinateSystem.CARTESIAN),
+('survey_ibema_faxinal_Cartesian_no_header.txt', ValueError, CoordinateSystem.CARTESIAN),
+('survey_ibema_faxinal_Cartesian_wrong_entry.txt', ValueError, CoordinateSystem.CARTESIAN),
+('survey_ibema_faxinal_Geographic_invalid_column.csv', ValueError, CoordinateSystem.GEOGRAPHIC),
+('survey_ibema_faxinal_Geographic_no_header.csv', ValueError, CoordinateSystem.GEOGRAPHIC),
+('survey_ibema_faxinal_Geographic_wrong_entry.csv', ValueError, CoordinateSystem.GEOGRAPHIC),
+('survey_ibema_faxinal_Geographic_invalid_column.txt', ValueError, CoordinateSystem.GEOGRAPHIC),
+('survey_ibema_faxinal_Geographic_no_header.txt', ValueError, CoordinateSystem.GEOGRAPHIC),
+('survey_ibema_faxinal_Geographic_wrong_entry.txt', ValueError, CoordinateSystem.GEOGRAPHIC),
+('survey_ibema_faxinal_UTM_invalid_column.csv', ValueError, CoordinateSystem.UTM),
+('survey_ibema_faxinal_UTM_no_header.csv', ValueError, CoordinateSystem.UTM),
+('survey_ibema_faxinal_UTM_wrong_entry.csv', ValueError, CoordinateSystem.UTM),
+('survey_ibema_faxinal_UTM_invalid_column.txt', ValueError, CoordinateSystem.UTM),
+('survey_ibema_faxinal_UTM_no_header.txt', ValueError, CoordinateSystem.UTM),
+('survey_ibema_faxinal_UTM_wrong_entry.txt', ValueError, CoordinateSystem.UTM),
+])
 
 @pytest.mark.parametrize(*test_cases)
-def test_import_error(source, error_type):
+def test_import_error(source, error_type, coordinate_system):
         source = sample_directory + source
         with pytest.raises(error_type):
-            _ = Survey(source, 'sample')
+            _ = Survey(source, 'sample', coordinate_system)
