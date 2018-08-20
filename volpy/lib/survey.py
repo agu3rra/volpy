@@ -129,19 +129,17 @@ class Survey():
                 for column in data.columns:
                     data[column] = pd.to_numeric(data[column])
                 
-                breakpoint()
-
                 # Generate UTM and then Cartesian
-                # CONTINUE HERE - Error: Find out how to do multiple pandas assignment
-                data['northing'],
-                data['easting'],
-                data['zone_number'],
-                data['zone_letter'],
-                data['elevation'] = UtmCoordinate.create_from_geographic(
-                    data['latitude'],
-                    data['longitude'],
-                    data['elevation']
-                )
+                def generate_utm(row):
+                    return UtmCoordinate.create_from_geographic(
+                        row['latitude'],
+                        row['longitude'],
+                        row['elevation'])
+                data['UTM'] = data.apply(generate_utm, axis=1)
+                data['easting'] = data.apply(lambda row: row['UTM'].easting,
+                                             axis=1)
+                data['northing'] = data.apply(lambda row: row['UTM'].northing,
+                                              axis=1)
                 data['x'] = data['easting'] - data['easting'].min()
                 data['y'] = data['northing'] - data['northing'].min()
                 data['z'] = data['elevation'] - data['elevation'].min()
