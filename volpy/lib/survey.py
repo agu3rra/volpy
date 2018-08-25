@@ -39,7 +39,7 @@ class Survey():
         self.name = name
         self.source = source
         self.coordinate_system = coordinate_system
-        
+
         if extension == '.gpx':
             self.data = self._read_gpx()
         elif (extension == '.csv') or (extension == '.txt'):
@@ -108,15 +108,16 @@ class Survey():
         data['z'] = data['elevation'] - data['elevation'].min()
         selection = ['x', 'y', 'z', 'elevation']
         return data[selection]
-                                         
+
     def _read_csv(self):
 
         if self.coordinate_system == CoordinateSystem.GEOGRAPHIC:
             try:
                 data = pd.read_csv(self.source)
-                
+
                 if data.shape[1] != 3:
-                    raise ValueError("Unexpected number of columns")
+                    raise ValueError(
+                        "Unexpected number of columns. Expected 3.")
 
                 # Verify expected column names
                 expected_columns = ['latitude', 'longitude', 'elevation']
@@ -128,7 +129,7 @@ class Survey():
                 # Convertion to numeric:
                 for column in data.columns:
                     data[column] = pd.to_numeric(data[column])
-                
+
                 # Generate UTM and then Cartesian
                 def generate_utm(row):
                     return UtmCoordinate.create_from_geographic(
@@ -147,14 +148,70 @@ class Survey():
                 return data[selection]
 
             except Exception as exception:
-                print(exception)
                 raise exception
 
-        if self.coordinate_system == CoordinateSystem.CARTESIAN:
-            pass
+        elif self.coordinate_system == CoordinateSystem.UTM:
+            try:
+                data = pd.read_csv(self.source)
 
-        if self.coordinate_system == CoordinateSystem.UTM:
-            pass
+                if data.shape[1] != 3:
+                    raise ValueError(
+                        "Unexpected number of columns. Expected 3.")
+
+                # Verify expected column names
+                expected_columns = ['easting',
+                                    'northing',
+                                    'elevation']
+                for item in data.columns:
+                    if item not in expected_columns:
+                        raise ValueError("Unexpected column name. Expected:{}"\
+                        .format(expected_columns))
+
+                # Convertion to numeric:
+                for column in data.columns:
+                    data[column] = pd.to_numeric(data[column])
+
+                # Generate cartesian
+                data['x'] = data['easting'] - data['easting'].min()
+                data['y'] = data['northing'] - data['northing'].min()
+                data['z'] = data['elevation'] - data['elevation'].min()
+                selection = ['x', 'y', 'z', 'elevation']
+                return data[selection]
+
+            except Exception as exception:
+                raise exception
+
+        elif self.coordinate_system == CoordinateSystem.CARTESIAN:
+            # RESUME HERE
+            try:
+                data = pd.read_csv(self.source)
+
+                if data.shape[1] != 3:
+                    raise ValueError(
+                        "Unexpected number of columns. Expected 3.")
+
+                # Verify expected column names
+                expected_columns = ['x',
+                                    'y',
+                                    'z']
+                for item in data.columns:
+                    if item not in expected_columns:
+                        raise ValueError("Unexpected column name. Expected:{}"\
+                        .format(expected_columns))
+
+                # Convertion to numeric:
+                for column in data.columns:
+                    data[column] = pd.to_numeric(data[column])
+
+                # Generate output
+                data['elevation'] = data['z'] # keeping return values consitent
+                return data
+
+            except Exception as exception:
+                raise exception
+
+        else:
+            raise ValueError('Unknown coordinate system.')
 
     def _read_excel(self):
         return True
