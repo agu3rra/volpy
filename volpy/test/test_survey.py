@@ -3,7 +3,7 @@
 import pytest
 import pandas as pd
 import sys
-sys.path.append('../lib')
+sys.path.append('../bin')
 
 from survey import Survey
 from coordinates import CoordinateSystem

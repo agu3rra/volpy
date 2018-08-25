@@ -1,4 +1,5 @@
 # Defines the different types of coordinates that application can work with
+import numpy as np
 import utm
 from enum import Enum
 
@@ -33,7 +34,7 @@ class CartesianCoordinate():
     """
     Classical cartesian coordinate system with x, y, z axes.
     """
-    def __init__(self, x, y, z):
+    def __init__(self, x: np.float64, y: np.float64, z: np.float64):
         self.x = x
         self.y = y
         self.z = z
