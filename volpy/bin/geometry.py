@@ -19,7 +19,7 @@ class Line2D():
         connects point_A to point_B
         """
         if self.point_B.x - self.point_A.x == 0: # line is parallel in the y axis
-            return None, None
+            return 0.0, 0.0
         else:
             slope = (self.point_B.y - self.point_A.y) /\
                     (self.point_B.x - self.point_A.x)
