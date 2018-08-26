@@ -39,6 +39,9 @@ class CartesianCoordinate():
         self.y = y
         self.z = z
 
+    def __str__(self):
+        return 'point: {0}, {1}, {2}'.format(self.x, self.y, self.z)
+
     def __sub__(self, point_B):
         """
         Returns the difference between 2 points in a cartesian plane.

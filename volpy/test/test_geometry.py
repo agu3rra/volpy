@@ -63,24 +63,39 @@ def test_point_subtraction(point_A, point_B, expected):
 Test plane equation is correctly defined.
 """
 test_cases = (
-    ('point_A', 'point_B', 'point_C', 'input_x', 'input_y', 'output_z'),
+    ('point_A', 'point_B', 'point_C', 'input_y', 'input_x', 'output_z'),
     [
         (CartesianCoordinate(3, 0, 8),
          CartesianCoordinate(5, 9, 1),
          CartesianCoordinate(10, 4, 7),
-         18,
          32,
+         18,
          -14.164) #expected z=f(x,y) for the plane defined for the above points
     ]
 )
 
 @pytest.mark.parametrize(*test_cases)
-def test_plane_equation(point_A, point_B, point_C, input_x, input_y, output_z):
+def test_plane_equation(point_A, point_B, point_C, input_y, input_x, output_z):
     triangle = Triangle(point_A, point_B, point_C)
     plane = triangle.get_plane_equation()
-    output_z_calculated = plane(input_x, input_y)
+    output_z_calculated = plane(input_y, input_x)
     assert output_z_calculated == pytest.approx(output_z, 0.01)
 
 """
 Test volume of a triangle is calculated as expected.
 """
+test_cases = (
+    ('point_A', 'point_B', 'point_C', 'expected_volume'),
+    [
+        (CartesianCoordinate(3, 0, 8),
+         CartesianCoordinate(5, 9, 1),
+         CartesianCoordinate(10, 4, 7),
+         770.63)
+    ]
+)
+
+@pytest.mark.parametrize(*test_cases)
+def test_volume_calculation(point_A, point_B, point_C, expected_volume):
+    triangle = Triangle(point_A, point_B, point_C)
+    volume, _ = triangle.get_volume()
+    assert volume == pytest.approx(expected_volume, 0.05)
