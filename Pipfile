@@ -9,6 +9,7 @@ utm = "*"
 pytest = "*"
 bokeh = "*"
 plotly = "*"
+scipy = "*"
 
 [dev-packages]
 autopep8 = "*"

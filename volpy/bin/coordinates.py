@@ -38,3 +38,13 @@ class CartesianCoordinate():
         self.x = x
         self.y = y
         self.z = z
+
+    def __sub__(self, point_B):
+        """
+        Returns the difference between 2 points in a cartesian plane.
+        It is used to create a vector out of 2 points in 3D space.
+        """
+        minuend = np.array([self.x, self.y, self.z])
+        subtrahend = np.array([point_B.x, point_B.y, point_B.z])
+        return minuend - subtrahend
+        
