@@ -5,7 +5,7 @@ sys.path.append('../bin')
 
 from coordinates import CartesianCoordinate
 from geometry import Line2D
-
+from geometry import Triangle
 
 """
 Test Line2D correctly represents a line. Cases below were calculated manually.
@@ -15,7 +15,7 @@ test_cases = (('point_A', 'point_B', 'input_x', 'output_y'),
     (CartesianCoordinate(3, 5, 8),
      CartesianCoordinate(4, 2, 4),
      9.0,
-     -13),
+     -13), # Assert that f(9)=-13 for the line AB
 
     (CartesianCoordinate(3, 5, 8),
      CartesianCoordinate(3, 2, 4),
@@ -62,6 +62,24 @@ def test_point_subtraction(point_A, point_B, expected):
 """
 Test plane equation is correctly defined.
 """
+test_cases = (
+    ('point_A', 'point_B', 'point_C', 'input_x', 'input_y', 'output_z'),
+    [
+        (CartesianCoordinate(3, 0, 8),
+         CartesianCoordinate(5, 9, 1),
+         CartesianCoordinate(10, 4, 7),
+         18,
+         32,
+         -14.164) #expected z=f(x,y) for the plane defined for the above points
+    ]
+)
+
+@pytest.mark.parametrize(*test_cases)
+def test_plane_equation(point_A, point_B, point_C, input_x, input_y, output_z):
+    triangle = Triangle(point_A, point_B, point_C)
+    plane = triangle.get_plane_equation()
+    output_z_calculated = plane(input_x, input_y)
+    assert output_z_calculated == pytest.approx(output_z, 0.01)
 
 """
 Test volume of a triangle is calculated as expected.
