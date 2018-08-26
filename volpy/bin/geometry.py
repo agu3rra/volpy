@@ -1,5 +1,4 @@
 import numpy as np
-import math
 from scipy import integrate
 
 from coordinates import CartesianCoordinate
@@ -115,4 +114,5 @@ class TriangularMesh():
         Arguments:
         point_cloud: a pandas dataframe containing x, y, z, elevation
         """
+        # This is where we'll say hi to our old friend Delaunay
         pass
