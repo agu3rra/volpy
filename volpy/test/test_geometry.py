@@ -10,30 +10,34 @@ from geometry import Line2D
 """
 Test Line2D correctly represents a line. Cases below were calculated manually.
 """
-test_cases = (('point_A', 'point_B', 'slope', 'linear_constant'),
+test_cases = (('point_A', 'point_B', 'input_x', 'output_y'),
 [
     (CartesianCoordinate(3, 5, 8),
      CartesianCoordinate(4, 2, 4),
-     -3.0,
-     14.0),
+     9.0,
+     -13),
 
     (CartesianCoordinate(3, 5, 8),
      CartesianCoordinate(3, 2, 4),
-     0.0,
-     0.0),
+     163.4,
+     None),
 
     (CartesianCoordinate(19.34, 3.12, 8),
      CartesianCoordinate(0.5, -8.12, 4),
-     0.597,
-     -8.418),
+     18,
+     2.328),
 ])
 
 @pytest.mark.parametrize(*test_cases)
-def test_2dLine(point_A, point_B, slope, linear_constant):
+def test_2dLine(point_A, point_B, input_x, output_y):
     line = Line2D(point_A, point_B)
-    calculated_slope, calculated_linear_constant = line.get_parameters()
-    assert calculated_slope == pytest.approx(slope, 0.002)
-    assert calculated_linear_constant == pytest.approx(linear_constant, 0.002)
+    line_equation = line.get_line_equation()
+    if line_equation is None:
+        output_y_calculated = None
+        assert output_y == output_y_calculated
+    else:
+        output_y_calculated = line_equation(input_x)
+        assert output_y == pytest.approx(output_y_calculated, 0.01)
 
 """
 Test the subtraction of Cartesian Coordinates

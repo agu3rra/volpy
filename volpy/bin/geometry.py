@@ -19,8 +19,8 @@ class Line2D():
         self.point_B = point_B
     
     def get_line_equation(self):
-        """Returns the slope and linear_constant of the line equation that 
-        connects point_A to point_B
+        """Returns a callable f(x): the line equation that connects point_A to
+        point_B
         """
         if self.point_B.x - self.point_A.x == 0: # line parallel to the y axis
             return None
@@ -71,12 +71,10 @@ class Triangle():
         # The below code on get_volume has not yet been tested
 
         # Define how to compute a double integral
-        def compute_double_integral(line_from,
-                                    line_to,
+        def compute_double_integral(line_from_equation,
+                                    line_to_equation,
                                     outer_limit_from,
                                     outer_limit_to):
-            line_from_equation = line_from.get_line_equation()
-            line_to_equation = line_to.get_line_equation()
             if ((line_from_equation is None) or (line_to_equation is None)):
                 return 0.0, 0.0 # vertical line
             volume, error = integrate.dblquad(self.get_plane_equation,
@@ -86,19 +84,19 @@ class Triangle():
                                               line_to_equation)
             return volume, error
 
-        # Compute line equations
+        # Instantiate lines
         lineAB = Line2D(self.point_A, self.point_B)
         lineBC = Line2D(self.point_B, self.point_C)
         lineAC = Line2D(self.point_A, self.point_C)
 
         # Compute double integral 1:
-        volume1, error1 = compute_double_integral(lineAB,
-                                                  lineAC,
+        volume1, error1 = compute_double_integral(lineAB.get_line_equation(),
+                                                  lineAC.get_line_equation(),
                                                   self.point_A.x,
                                                   self.point_B.x)
         # Compute double integral 2:
-        volume2, error2 = compute_double_integral(lineAC,
-                                                  lineBC,
+        volume2, error2 = compute_double_integral(lineAC.get_line_equation(),
+                                                  lineBC.get_line_equation(),
                                                   self.point_B.x,
                                                   self.point_C.x)
 
