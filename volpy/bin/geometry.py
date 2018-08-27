@@ -1,5 +1,6 @@
 import numpy as np
-from scipy import integrate
+from sympy import symbols
+from sympy import integrate
 
 from coordinates import CartesianCoordinate
 
@@ -28,10 +29,8 @@ class Line2D():
             slope = (self.point_B.y - self.point_A.y) /\
                     (self.point_B.x - self.point_A.x)
             linear_constant = -slope*self.point_A.x + self.point_A.y
-            def line(x):
-                return slope*x + linear_constant
-            return line
-        
+            x = symbols('x')
+            return slope*x + linear_constant        
 
 class Triangle():
     """A triangle in a 3D Cartesian Coordinates System"""
@@ -52,15 +51,14 @@ class Triangle():
         vector_AB = self.point_B - self.point_A
         vector_BC = self.point_C - self.point_B
         normal_vector = np.cross(vector_AB, vector_BC)
-        def plane(y, x):
-            a = normal_vector[0]
-            b = normal_vector[1]
-            c = normal_vector[2]
-            xo = self.point_A.x
-            yo = self.point_A.y
-            zo = self.point_A.z
-            return ((-a*(x-xo)-b*(y-yo))/c)+zo
-        return plane
+        a = normal_vector[0]
+        b = normal_vector[1]
+        c = normal_vector[2]
+        xo = self.point_A.x
+        yo = self.point_A.y
+        zo = self.point_A.z
+        x, y = symbols('x y')
+        return ((-a*(x-xo)-b*(y-yo))/c)+zo
 
     def get_volume(self):
         """
@@ -75,12 +73,11 @@ class Triangle():
                                     line_to_equation):
             if ((line_from_equation is None) or (line_to_equation is None)):
                 return 0.0, 0.0 # vertical line
-            volume, error = integrate.dblquad(plane,
-                                              outer_boundary_from,
-                                              outer_boundary_to,
-                                              line_from_equation,
-                                              line_to_equation)
-            return volume, error
+            x, y = symbols('x y')
+            volume =  integrate(plane,
+                                (y, line_from_equation, line_to_equation),
+                                (x, outer_boundary_from, outer_boundary_to))
+            return volume
 
         # Instantiate lines
         lineAB = Line2D(self.point_A, self.point_B)
@@ -88,20 +85,19 @@ class Triangle():
         lineAC = Line2D(self.point_A, self.point_C)
 
         # Compute double integral 1:
-        volume1, error1 = compute_double_integral(self.point_A.x,
-                                                  self.point_B.x,
-                                                  lineAB.get_line_equation(),
-                                                  lineAC.get_line_equation())
+        volume1 = compute_double_integral(self.point_A.x,
+                                          self.point_B.x,
+                                          lineAB.get_line_equation(),
+                                          lineAC.get_line_equation())
         # Compute double integral 2:
-        volume2, error2 = compute_double_integral(self.point_B.x,
-                                                  self.point_C.x,
-                                                  lineBC.get_line_equation(),
-                                                  lineAC.get_line_equation())
+        volume2 = compute_double_integral(self.point_B.x,
+                                          self.point_C.x,
+                                          lineBC.get_line_equation(),
+                                          lineAC.get_line_equation())
 
         # Sum and return
         total_volume = abs(volume1) + abs(volume2)
-        total_error = abs(error1) + abs(error2)
-        return total_volume, total_error
+        return total_volume
 
 class TriangularMesh():
 

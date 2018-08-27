@@ -1,5 +1,7 @@
 import pytest
 import numpy as np
+from sympy import symbols
+
 import sys
 sys.path.append('../bin')
 
@@ -36,7 +38,8 @@ def test_2dLine(point_A, point_B, input_x, output_y):
         output_y_calculated = None
         assert output_y == output_y_calculated
     else:
-        output_y_calculated = line_equation(input_x)
+        x = symbols('x')
+        output_y_calculated = float(line_equation.subs(x, input_x))
         assert output_y == pytest.approx(output_y_calculated, 0.01)
 
 """
@@ -78,7 +81,8 @@ test_cases = (
 def test_plane_equation(point_A, point_B, point_C, input_y, input_x, output_z):
     triangle = Triangle(point_A, point_B, point_C)
     plane = triangle.get_plane_equation()
-    output_z_calculated = plane(input_y, input_x)
+    x, y = symbols('x y')
+    output_z_calculated = float(plane.subs([(x, input_x), (y, input_y)]))
     assert output_z_calculated == pytest.approx(output_z, 0.01)
 
 """
@@ -90,12 +94,12 @@ test_cases = (
         (CartesianCoordinate(3, 0, 8),
          CartesianCoordinate(5, 9, 1),
          CartesianCoordinate(10, 4, 7),
-         770.63)
+         146.67)
     ]
 )
 
 @pytest.mark.parametrize(*test_cases)
 def test_volume_calculation(point_A, point_B, point_C, expected_volume):
     triangle = Triangle(point_A, point_B, point_C)
-    volume, _ = triangle.get_volume()
+    volume = triangle.get_volume()
     assert volume == pytest.approx(expected_volume, 0.05)
