@@ -50,4 +50,13 @@ class CartesianCoordinate():
         minuend = np.array([self.x, self.y, self.z])
         subtrahend = np.array([point_B.x, point_B.y, point_B.z])
         return minuend - subtrahend
+
+    def __lt__(self, point_B):
+        """Comparison override used to sort points in function of their x
+        coordinate. This was done so because of the order the double integral
+        is applied when calculating the volume casted by an ABC traingle 
+        (defined by a set of 3 Cartesian Coordinates)
+        """
+        return self.x < point_B.x
+
         

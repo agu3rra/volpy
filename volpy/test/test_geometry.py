@@ -68,12 +68,12 @@ Test plane equation is correctly defined.
 test_cases = (
     ('point_A', 'point_B', 'point_C', 'input_y', 'input_x', 'output_z'),
     [
-        (CartesianCoordinate(3, 0, 8),
-         CartesianCoordinate(5, 9, 1),
-         CartesianCoordinate(10, 4, 7),
-         32,
-         18,
-         -14.164) #expected z=f(x,y) for the plane defined for the above points
+    (CartesianCoordinate(3, 0, 8),
+    CartesianCoordinate(5, 9, 1),
+    CartesianCoordinate(10, 4, 7),
+    32,
+    18,
+    -14.164)
     ]
 )
 
@@ -94,7 +94,14 @@ test_cases = (
         (CartesianCoordinate(3, 0, 8),
          CartesianCoordinate(5, 9, 1),
          CartesianCoordinate(10, 4, 7),
-         146.67)
+         146.67),
+
+        (CartesianCoordinate(5, 9, 1),
+         CartesianCoordinate(3, 0, 8),
+         CartesianCoordinate(10, 4, 7),
+         146.67) #ensure algorithm robustness
+
+         # Create test case for a prism.
     ]
 )
 
@@ -103,3 +110,17 @@ def test_volume_calculation(point_A, point_B, point_C, expected_volume):
     triangle = Triangle(point_A, point_B, point_C)
     volume = triangle.get_volume()
     assert volume == pytest.approx(expected_volume, 0.05)
+
+
+"""Test sorting of Cartesian Coordinates as a function of their x coordinate"""
+test_cases = (
+    ('point_A', 'point_B'),
+    [
+        (CartesianCoordinate(8, 12, 5),
+         CartesianCoordinate(10, 9, 2))
+    ]
+)
+
+@pytest.mark.parametrize(*test_cases)
+def test_cartesian_sorting(point_A, point_B):
+    pass

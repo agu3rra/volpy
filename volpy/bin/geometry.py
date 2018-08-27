@@ -87,13 +87,13 @@ class Triangle():
         # Compute double integral 1:
         volume1 = compute_double_integral(self.point_A.x,
                                           self.point_B.x,
-                                          lineAB.get_line_equation(),
-                                          lineAC.get_line_equation())
+                                          lineAC.get_line_equation(),
+                                          lineAB.get_line_equation())
         # Compute double integral 2:
         volume2 = compute_double_integral(self.point_B.x,
                                           self.point_C.x,
-                                          lineBC.get_line_equation(),
-                                          lineAC.get_line_equation())
+                                          lineAC.get_line_equation(),
+                                          lineBC.get_line_equation())
 
         # Sum and return
         total_volume = abs(volume1) + abs(volume2)
