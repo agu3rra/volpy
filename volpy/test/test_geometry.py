@@ -104,9 +104,19 @@ test_cases = (
         (CartesianCoordinate(10, 4, 7),
          CartesianCoordinate(3, 0, 8),
          CartesianCoordinate(5, 9, 1),
-         146.67)
+         146.67),
 
-         # Create test case for a prism.
+        # Create test case for a prism.
+         (CartesianCoordinate(5, 0, 20),
+         CartesianCoordinate(0, 10, 20),
+         CartesianCoordinate(0, 0, 20),
+         500.00),
+
+         (CartesianCoordinate(15, 10, 20),
+         CartesianCoordinate(5, 5, 20),
+         CartesianCoordinate(10,15, 20),
+         750.00)
+         
     ]
 )
 

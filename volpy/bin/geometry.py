@@ -72,7 +72,7 @@ class Triangle():
                                     line_from_equation,
                                     line_to_equation):
             if ((line_from_equation is None) or (line_to_equation is None)):
-                return 0.0, 0.0 # vertical line
+                return 0.0 # vertical line
             x, y = symbols('x y')
             volume =  integrate(plane,
                                 (y, line_from_equation, line_to_equation),
