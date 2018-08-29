@@ -42,21 +42,23 @@ class CartesianCoordinate():
     def __str__(self):
         return 'point: {0}, {1}, {2}'.format(self.x, self.y, self.z)
 
-    def __sub__(self, point_B):
+    def __sub__(self, other):
         """
         Returns the difference between 2 points in a cartesian plane.
         It is used to create a vector out of 2 points in 3D space.
         """
         minuend = np.array([self.x, self.y, self.z])
-        subtrahend = np.array([point_B.x, point_B.y, point_B.z])
+        subtrahend = np.array([other.x, other.y, other.z])
         return minuend - subtrahend
 
-    def __lt__(self, point_B):
+    def __lt__(self, other):
         """Comparison override used to sort points in function of their x
         coordinate. This was done so because of the order the double integral
         is applied when calculating the volume casted by an ABC traingle 
         (defined by a set of 3 Cartesian Coordinates)
         """
-        return self.x < point_B.x
+        return self.x < other.x
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y and self.z == other.z
         

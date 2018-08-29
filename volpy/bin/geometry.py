@@ -79,19 +79,22 @@ class Triangle():
                                 (x, outer_boundary_from, outer_boundary_to))
             return volume
 
-        # Instantiate lines
-        lineAB = Line2D(self.point_A, self.point_B)
-        lineBC = Line2D(self.point_B, self.point_C)
-        lineAC = Line2D(self.point_A, self.point_C)
+        # Instantiate lines. Points must be sorted on the x coordinate.
+        points = [self.point_A, self.point_B, self.point_C]
+        points.sort()
+        sorted_point_A, sorted_point_B, sorted_point_C = points
+        lineAB = Line2D(sorted_point_A, sorted_point_B)
+        lineBC = Line2D(sorted_point_B, sorted_point_C)
+        lineAC = Line2D(sorted_point_A, sorted_point_C)
 
         # Compute double integral 1:
-        volume1 = compute_double_integral(self.point_A.x,
-                                          self.point_B.x,
+        volume1 = compute_double_integral(sorted_point_A.x,
+                                          sorted_point_B.x,
                                           lineAC.get_line_equation(),
                                           lineAB.get_line_equation())
         # Compute double integral 2:
-        volume2 = compute_double_integral(self.point_B.x,
-                                          self.point_C.x,
+        volume2 = compute_double_integral(sorted_point_B.x,
+                                          sorted_point_C.x,
                                           lineAC.get_line_equation(),
                                           lineBC.get_line_equation())
 

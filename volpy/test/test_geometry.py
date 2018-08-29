@@ -99,7 +99,12 @@ test_cases = (
         (CartesianCoordinate(5, 9, 1),
          CartesianCoordinate(3, 0, 8),
          CartesianCoordinate(10, 4, 7),
-         146.67) #ensure algorithm robustness
+         146.67),
+
+        (CartesianCoordinate(10, 4, 7),
+         CartesianCoordinate(3, 0, 8),
+         CartesianCoordinate(5, 9, 1),
+         146.67)
 
          # Create test case for a prism.
     ]
@@ -123,4 +128,9 @@ test_cases = (
 
 @pytest.mark.parametrize(*test_cases)
 def test_cartesian_sorting(point_A, point_B):
-    pass
+    array = [point_B, point_A]
+    array.sort()
+    print(array)
+    assert array[0] == point_A
+    assert array[1] == point_B
+    
