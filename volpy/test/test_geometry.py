@@ -6,8 +6,11 @@ import sys
 sys.path.append('../bin')
 
 from coordinates import CartesianCoordinate
+from coordinates import CoordinateSystem
 from geometry import Line2D
 from geometry import Triangle
+from geometry import TriangularMesh
+from survey import Survey
 
 """
 Test Line2D correctly represents a line. Cases below were calculated manually.
@@ -40,7 +43,7 @@ def test_2dLine(point_A, point_B, input_x, output_y):
     else:
         x = symbols('x')
         output_y_calculated = float(line_equation.subs(x, input_x))
-        assert output_y == pytest.approx(output_y_calculated, 0.01)
+        assert output_y == pytest.approx(output_y_calculated, abs=0.01)
 
 """
 Test the subtraction of Cartesian Coordinates
@@ -83,7 +86,7 @@ def test_plane_equation(point_A, point_B, point_C, input_y, input_x, output_z):
     plane = triangle.get_plane_equation()
     x, y = symbols('x y')
     output_z_calculated = float(plane.subs([(x, input_x), (y, input_y)]))
-    assert output_z_calculated == pytest.approx(output_z, 0.01)
+    assert output_z_calculated == pytest.approx(output_z, abs=0.01)
 
 """
 Test volume of a triangle is calculated as expected.
@@ -124,15 +127,14 @@ test_cases = (
 def test_volume_calculation(point_A, point_B, point_C, expected_volume):
     triangle = Triangle(point_A, point_B, point_C)
     volume = triangle.get_volume()
-    assert volume == pytest.approx(expected_volume, 0.05)
+    assert volume == pytest.approx(expected_volume, abs=0.05)
 
 
 """Test sorting of Cartesian Coordinates as a function of their x coordinate"""
 test_cases = (
     ('point_A', 'point_B'),
     [
-        (CartesianCoordinate(8, 12, 5),
-         CartesianCoordinate(10, 9, 2))
+        (CartesianCoordinate(8, 12, 5), CartesianCoordinate(10, 9, 2))
     ]
 )
 
@@ -143,4 +145,12 @@ def test_cartesian_sorting(point_A, point_B):
     print(array)
     assert array[0] == point_A
     assert array[1] == point_B
-    
+
+"""Test Mesh Volume"""
+def test_mesh_volume():
+    source = '../sample_data/survey_delaunay_Cartesian.csv'
+    survey = Survey(source,
+                    'sample',
+                    coordinate_system=CoordinateSystem.CARTESIAN)
+    mesh = TriangularMesh(survey.data)
+    assert mesh.get_volume() == pytest.approx(168.0, rel=0.01)

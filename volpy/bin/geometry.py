@@ -1,6 +1,7 @@
 import numpy as np
 from sympy import symbols
 from sympy import integrate
+from scipy.spatial import Delaunay
 
 from coordinates import CartesianCoordinate
 
@@ -57,7 +58,7 @@ class Triangle():
         xo = self.point_A.x
         yo = self.point_A.y
         zo = self.point_A.z
-        x, y = symbols('x y')
+        x, y = symbols('x y') # z = f(x, y)
         return ((-a*(x-xo)-b*(y-yo))/c)+zo
 
     def get_volume(self):
@@ -79,7 +80,7 @@ class Triangle():
                                 (x, outer_boundary_from, outer_boundary_to))
             return volume
 
-        # Instantiate lines. Points must be sorted on the x coordinate.
+        # Instantiate lines. Points are sorted on the x coordinate.
         points = [self.point_A, self.point_B, self.point_C]
         points.sort()
         sorted_point_A, sorted_point_B, sorted_point_C = points
@@ -102,12 +103,26 @@ class Triangle():
         total_volume = abs(volume1) + abs(volume2)
         return total_volume
 
-class TriangularMesh():
+class TriangularMesh(object):
 
     def __init__(self, point_cloud):
         """
         Arguments:
         point_cloud: a pandas dataframe containing x, y, z, elevation
         """
-        # This is where we'll say hi to our old friend Delaunay
-        pass
+        self.point_cloud = point_cloud
+        self.data = Delaunay(self.point_cloud[['x', 'y']]).simplices
+
+    def get_volume(self):
+        mesh_volume = 0
+        for i in range(len(self.data)):
+            A = self.point_cloud.iloc[self.data[i][0]]
+            B = self.point_cloud.iloc[self.data[i][1]]
+            C = self.point_cloud.iloc[self.data[i][2]]
+            point_A = CartesianCoordinate(A['x'], A['y'], A['z'])
+            point_B = CartesianCoordinate(B['x'], B['y'], B['z'])
+            point_C = CartesianCoordinate(C['x'], C['y'], C['z'])
+            triangle = Triangle(point_A, point_B, point_C)
+            volume = triangle.get_volume()
+            mesh_volume += volume
+        return mesh_volume
