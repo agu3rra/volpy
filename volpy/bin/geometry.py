@@ -4,7 +4,7 @@ from sympy import integrate
 from scipy.spatial import Delaunay
 
 from coordinates import CartesianCoordinate
-
+from utils import print_progress
 
 class Line2D():
     """A 2-Dimensional line"""
@@ -115,7 +115,9 @@ class TriangularMesh(object):
 
     def get_volume(self):
         mesh_volume = 0
-        for i in range(len(self.data)):
+        iteration = 0
+        data_amount = len(self.data)
+        for i in range(data_amount):
             A = self.point_cloud.iloc[self.data[i][0]]
             B = self.point_cloud.iloc[self.data[i][1]]
             C = self.point_cloud.iloc[self.data[i][2]]
@@ -125,4 +127,7 @@ class TriangularMesh(object):
             triangle = Triangle(point_A, point_B, point_C)
             volume = triangle.get_volume()
             mesh_volume += volume
+            # update progress bar
+            iteration += 1
+            print_progress(iteration, data_amount, prefix = 'Progress:', suffix = 'Complete', length = 50)
         return mesh_volume

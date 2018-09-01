@@ -1,12 +1,12 @@
 # General use utility functions.
 
-def printProgressBar (iteration,
-                      total,
-                      prefix='',
-                      suffix='',
-                      decimals=1,
-                      length=100,
-                      fill='█'):
+def print_progress(iteration,
+                   total,
+                   prefix='',
+                   suffix='',
+                   decimals=1,
+                   length=100,
+                   fill='█'):
     """Terminal progress bar
     @params:
     iteration   - Required  : current iteration (Int)
