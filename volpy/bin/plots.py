@@ -2,6 +2,7 @@ import plotly
 import plotly.offline as po
 import plotly.graph_objs as go
 from plotly import tools
+from geometry import TriangularMesh
 
 class SurveyPlot():
     """Groups different plot types on  data"""
@@ -39,7 +40,9 @@ class SurveyPlot():
             mode='markers',
             marker=dict(
                 size=4,
-                opacity=0.8
+                opacity=0.8,
+                #color=color,
+                #colorscale='Viridis'
             ),
             connectgaps=False)
         return trace
@@ -78,3 +81,30 @@ class SurveyPlot():
         figure.append_trace(trace_xz, 2, 1)
         figure.append_trace(trace_yz, 2, 2)
         return po.plot(figure, filename='survey_subplots.html')
+
+    def mesh_plot(self):
+        """Plots a top view of the triangular mesh for the survey"""
+        # RESUME HERE
+        # Idea: plot a sequence of triangles on a single scatter plot
+        # Do them with the same color and opacity to easily identify overlaps
+        # that shall not exist.
+        triangular_mesh = TriangularMesh(self.survey.data)
+        data_amount = len(triangular_mesh.data)
+        data = []
+        for i in range(data_amount):
+            A = triangular_mesh.point_cloud.iloc[triangular_mesh.data[i][0]]
+            B = triangular_mesh.point_cloud.iloc[triangular_mesh.data[i][1]]
+            C = triangular_mesh.point_cloud.iloc[triangular_mesh.data[i][2]]
+            trace = go.Scatter(
+                x=[A['x'], B['x'], C['x']],
+                y=[A['y'], B['y'], C['y']],
+                mode='markers',
+                marker=dict(
+                    size=4,
+                    opacity=0.3),
+                connectgaps=False,
+                fill='toself',
+                showlegend=False)
+            data.append(trace)
+        figure = go.Figure(data=data)
+        return po.plot(figure, filename='mesh.html')
