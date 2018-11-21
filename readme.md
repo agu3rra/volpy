@@ -13,7 +13,9 @@ The purpose of this Python project is to provide the means of calculating volume
 
 Its main goal is to provide sufficiently accurate volume estimates out of terrain surveys for an area of construction work where ground leveling is a key phase prior to the actual construction activity taking place.
 
-![Triangulated Irregular Network](https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Delaunay-Triangulation.svg/300px-Delaunay-Triangulation.svg.png)
+![Sample contour plot](images/Contour.png)
+
+<iframe src="volpy/examples/3d_view.html"></iframe>
 
 ## Installation
 ```bash
@@ -56,19 +58,6 @@ By default, volpy applies its calculations on a [Cartesian Coordinate System](ht
 >>> vp.load('survey_data.csv', coordinates=vp.Coordinates.GPS)
 ```
 
-### REST API
-
-In case you merely want to use this library to calculate volumes and have the output reports and graphics represented in another language or software package we recommend using it thru its REST API. For that purpose you will require an API TOKEN which can be obtained following these [instructions]().
-
-```Python
-import requests
-base_url = ""
-
-# What to use of authentication?
-# POST request to obtain session token
-# POST request to obtain data. Describe json format of expected values and response json data
-```
-
 ---
 
 ## Key Definitions
@@ -104,7 +93,7 @@ The sequence of points in 3D space represented each by an `(x,y,z)` triplet is g
 `[(xA,yA,zA), (xB,yB,zB), (xC,yC,zC)] = [A,B,C]`  
 
 This is what it looks like when viewed from the top:  
-![DelaunayTriangulation](https://upload.wikimedia.org/wikipedia/commons/c/c4/Delaunay_Triangulation_%28100_Points%29.svg)
+![DelaunayTriangulation](images/MeshXY.png)
 
 ### Step 2: From triangles to plane equations
 The plane equation `z=f(x,y)` representing the triangular plane is obtained for each group of 3 points in 3d space by applying some basic linear algebra. Given the previous collection of points `[A, B, C]` in the cartesian system:  
