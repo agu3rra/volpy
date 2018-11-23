@@ -80,10 +80,11 @@ Clay, for example, has a swell factor of 1.4. That means that if you remove 100 
 
 During most undergrad studies people are taught how to calculate integrals on a number of different equations. But the real world doesn't give us equations, we need to come up with the equations to model it. This was one of the most delightful pieces of this project: translating a set of points in space into equations and applying basic concepts of [linear algebra](https://en.wikipedia.org/wiki/Linear_algebra) and [integral calculus](https://en.wikipedia.org/wiki/Integral) to them to obtain volumes and [cut/fill](https://en.wikipedia.org/wiki/Cut_and_fill) curves that can be put to practical use in construction work involving [earthworks](https://en.wikipedia.org/wiki/Earthworks_(engineering)).
 
-## Summary of the volume calculation method
+## In a Nutshell
 1. From points to a triangles.
 2. From triangles to plane equations.
 3. From triangles and planes to a sum of volumes.
+
 ![Add picture of points -> triangles -> planes -> volumes]()
 
 ## Step 1: From points to triangles
@@ -94,7 +95,7 @@ This is what it looks like when viewed from the top:
 ![DelaunayTriangulation](images/MeshXY.png)
 
 ## Step 2: From triangles to plane equations
-The plane equation `z=f(x,y)` representing the triangular plane is obtained for each group of 3 points in 3d space by applying some basic linear algebra. Given the previous collection of points `[A, B, C]` in the cartesian system:  
+The plane equation `z=f(x,y)` representing is obtained for each group of 3 distinct points (triangles) in 3d space by applying some basic linear algebra. Given the previous collection of points `[A, B, C]` in the cartesian system:  
 1. Vector AB and BC are determined using each of their individual coordinates.
 2. The [cross product](https://en.wikipedia.org/wiki/Cross_product) AB x BC generates a perpendicular vector represented by numerical constants `(p,q,r)`.
 3. Finally the corresponding plane equation is given by:  
