@@ -1,6 +1,6 @@
 import pytest
 import sys
-sys.path.append('../bin')
+sys.path.append('../')
 
 from coordinates import CoordinateSystem
 from survey import Survey

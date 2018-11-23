@@ -3,7 +3,7 @@ import numpy as np
 from sympy import symbols
 
 import sys
-sys.path.append('../bin')
+sys.path.append('../')
 
 from coordinates import CartesianCoordinate
 from coordinates import CoordinateSystem
