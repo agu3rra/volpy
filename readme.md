@@ -81,8 +81,6 @@ During most undergrad studies people are taught how to calculate integrals on a 
 2. From triangles to plane equations.
 3. From triangles and planes to a sum of volumes.
 
-![Add picture of points -> triangles -> planes -> volumes]()
-
 ## Step 1: From points to triangles
 The sequence of points in 3D space represented each by an `(x,y,z)` triplet is grouped in a mesh grid using [Delaunay triangulation](https://en.wikipedia.org/wiki/Delaunay_triangulation) in the `(x,y)` coordinates. This process outputs a collection of points grouped in 3 sets of 3d coordinates, each representing a triangular plane in 3d space:  
 `[(xA,yA,zA), (xB,yB,zB), (xC,yC,zC)] = [A,B,C]`  
@@ -108,7 +106,7 @@ Given the plane equation, we can isolate z and obtain a `z=f(x,y)` function on t
 The volume of each individual triangle is obtained by the sum of 2 double integrals. So for a triangle with vertices ABC and its plane determined by `z=f(x,y)` the double integral limits for a single triangular area are determined as follows:  
 ![vol_triABC](images/Vol_triABC.jpg)  
 
-## Extra pre-step: From GPS to Cartesian.
-In the event of the [terrain survey](###-Terrain-survey) being executed thru a GPS device (a quite common case) an extra step is required prior to applying the volume calculation: [map projection](https://en.wikipedia.org/wiki/Map_projection).
+## From GPS to Cartesian Coordinates.
+In the event of the [terrain survey](###-Terrain-survey) being executed thru a GPS device (the most common case) an extra step is required prior to applying the volume calculation: [map projection](https://en.wikipedia.org/wiki/Map_projection).
 
 For the purpose of this project the [Universal Traverse Mercator](https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system) was used to convert from GPS coordinates (latitude, longitude, elevation) to a Cartesian coordinate system which is expected by the algorithm in [step 1](###-Step-1:-From-points-to-triangles).
