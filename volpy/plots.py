@@ -66,14 +66,14 @@ class SurveyPlot():
                             histfunc='count',
                             marker=dict(color='#ffb800'))
 
-    def generate_subplots(self):
+    def profile(self):
         figure = tools.make_subplots(rows=2,
                                      cols=2,
                                      subplot_titles=('Survey points collected',
                                                      'Top View: XY',
                                                      'Elevation(m): XZ',
                                                      'Elevation(m): YZ'))
-        figure['layout'].update(title='Survey plots')
+        figure['layout'].update(title='Terrain Profile')
         trace_histogram = self.histogram(
             self.survey.data.z, 'Elevation Histogram')
         trace_top = self.scatter(self.survey.data.x,
@@ -89,7 +89,7 @@ class SurveyPlot():
         figure.append_trace(trace_top, 1, 2)
         figure.append_trace(trace_xz, 2, 1)
         figure.append_trace(trace_yz, 2, 2)
-        return po.plot(figure, filename='survey_subplots.html')
+        return po.plot(figure, filename='profile.html')
 
     def mesh_plot(self):
         """Plots a top view of the triangular mesh for the survey"""
@@ -117,7 +117,8 @@ class SurveyPlot():
                     color=colors[current_color]),
                 connectgaps=False,
                 fill='toself',
-                showlegend=False)
+                showlegend=False,
+                name='Terrain Mesh')
             data.append(trace)
 
             # Color control

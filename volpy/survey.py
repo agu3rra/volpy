@@ -15,16 +15,21 @@ class Survey():
     def __init__(
         self,
         source,
-        name,
+        name='Survey',
         coordinate_system=CoordinateSystem.CARTESIAN):
         """Initializes a survey object
 
-        Arguments:
-        source: path to the file that contains the survey data.
-                     Accepted file types: .xlsx, .xls, .csv, .gpx
-        name: a meaningful name for this survey (str)
-        coordinate_system: an enumeration based on available coordinate systems
-                           at the coordinates module
+        :param source: path to the file that contains the survey data.
+                       Accepted file types: .xlsx, .xls, .csv, .gpx
+        :param name: a meaningful name for this survey (str).
+                     Default: 'Survey'
+        :param coordinate_system: an enumeration based on available coordinate
+                                  systems at the coordinates module.
+                                  Default: CoordinateSystem.CARTESIAN
+
+        :attr data: pandas DataFrame containing x, y, z, elevation as columns.
+                    internally set according to the available source file and
+                    CoordinateSystem.
         """
 
         # Validate if extension is supported.
@@ -58,6 +63,17 @@ class Survey():
                 expected_col_names[self.coordinate_system])
         else:
             raise ValueError("Error while parsing supported file extension.")
+
+    def get_bounds(self):
+        """
+        Returns a tuple with the maximum values for x, y, z available on the
+        survey data
+        """
+        x_max = self.data['x'].max()
+        y_max = self.data['y'].max()
+        z_max = self.data['z'].max()
+        print("x={}; y={}; z={}".format(x_max, y_max, z_max))
+        return (x_max, y_max, z_max)
 
     def _read_gpx(self):
         """Parses an xml file containing GPS data
@@ -129,11 +145,11 @@ class Survey():
 
         Returns a pandas data frame containing x, y, z, elevation columns
         """
-        
+
         try:
             # Read data
             data = pd.read_csv(self.source)
-            
+
             # Check number of columns
             if data.shape[1] != len(expected_col_names):
                     raise ValueError(
@@ -164,15 +180,16 @@ class Survey():
                 data['x'] = data['easting'] - data['easting'].min()
                 data['y'] = data['northing'] - data['northing'].min()
                 data['z'] = data['elevation'] - data['elevation'].min()
-            
+
             elif self.coordinate_system == CoordinateSystem.UTM:
                 data['x'] = data['easting'] - data['easting'].min()
                 data['y'] = data['northing'] - data['northing'].min()
                 data['z'] = data['elevation'] - data['elevation'].min()
-            
+
             elif self.coordinate_system == CoordinateSystem.CARTESIAN:
                 data['elevation'] = data['z'] # keeping return values consitent
-            
+                data['z'] = data['elevation'] - data['elevation'].min()
+
             else:
                 raise ValueError('Unknown coordinate system.')
 

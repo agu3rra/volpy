@@ -3,7 +3,7 @@ This project is currently a work in progress based on my previous project named 
 
 I will remove this section from this readme file once the project is complete and ready to use.
 
---- 
+---
 
 # Volume Calculations for Digital Elevation Models in Python (**volpy**)
 
@@ -25,29 +25,34 @@ $ pip install volpy
 ## Quick demo
 
 ```Python
->>> import volpy as vp
->>> vp.demo()
+import volpy as vp
+vp.demo()
 ```
 
 ## Simple use case
 
 ```Python
->>> import volpy as vp
->>> vol = vp.load('survey_data.csv', swell_factor=1.4)
->>> vol.volume()
-'29043.32 cubic meters'
->>> vol.bounds()
-'x=250.13, y=402.14, z=11.54'
->>> vol.level = 5.5
->>> vol.cut_volume()
-'11503.23 cubic meters'
->>> vol.fill_volume()
-'15321.41 cuic meters'
->>> vol.swell_factor = 1.5
->>> vol.volume_curves(step=0.5) # generates a graphic of Cut/fill from the base level to the highest using level steps of 0.5 meters
->>> vol.graph(dp.Graph.TOP)
->>> vol.graph(dp.Graph.PROFILE_XZ)
->>> vol.graph(dp.Graph.PROFILE_YZ)
+import volpy as vp
+survey = vp.load_survey('survey_data.csv')
+mesh = vp.terrain_mesh(survey)
+mesh.get_volume()
+> '29043.32 cubic meters'
+survey.get_bounds()
+> 'x=250.13, y=402.14, z=11.54'
+### Survey plots
+plots = vp.terrain_plots(survey)
+plots.scatter3d()
+plots.contour()
+plots.profile()
+plots.mesh_plot()
+mesh.ref_level = 5.5
+### The above statements are already working.
+mesh.cut_volume()
+> '11503.23 cubic meters'
+mesh.fill_volume()
+> '15321.41 cubic meters'
+mesh.swell_factor = 1.5
+mesh.volume_curves(step=0.5) # generates a graphic of Cut/fill from the base level to the highest using level steps of 0.5 meters
 ```
 
 By default, volpy applies its calculations on a [Cartesian Coordinate System](https://en.wikipedia.org/wiki/Cartesian_coordinate_system). If you are working with survey data obtained from a [GPS](https://en.wikipedia.org/wiki/Global_Positioning_System), its points are likely represented in a [Geographic Coordinate System](https://en.wikipedia.org/wiki/Geographic_coordinate_system). In order to convert it, use the following modifier when loading the data.

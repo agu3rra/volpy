@@ -105,12 +105,16 @@ class Triangle():
 
 class TriangularMesh(object):
 
-    def __init__(self, point_cloud):
+    def __init__(self, point_cloud, ref_level=0.0):
         """
-        Arguments:
-        point_cloud: a pandas dataframe containing x, y, z, elevation
+        :param point_cloud: a pandas dataframe containing x, y, z, elevation
+        :param ref_level: the base level for cut/fill volume calculations.
+        :attr data: a numpy array representing the triangular mesh of points
+                    generated using a Delaunay triangulation.
+                    Not set by the user.
         """
         self.point_cloud = point_cloud
+        self.ref_level=ref_level
         self.data = Delaunay(self.point_cloud[['x', 'y']]).simplices
 
     def get_volume(self):
@@ -136,3 +140,9 @@ class TriangularMesh(object):
                            suffix='Complete',
                            length = 50)
         return mesh_volume
+
+    def get_cut_volume(self):
+        pass
+
+    def get_fill_volume(self):
+        pass
