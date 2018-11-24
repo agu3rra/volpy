@@ -56,8 +56,6 @@ By default, volpy applies its calculations on a [Cartesian Coordinate System](ht
 >>> vp.load('survey_data.csv', coordinates=vp.Coordinates.GPS)
 ```
 
----
-
 # Key Definitions
 
 ## Terrain survey
@@ -73,8 +71,6 @@ In the context of ground leveling, cut volume refers to terrain material that ne
 The terrain's swell factor is a way of accounting for the fact that air and other non-terrain particles exist in a stationary mass of land. Because of it, once you remove a given amount of volume from a terrain, putting the same material back in the hole it generated will cause terrain level to become lower than its original form.
 
 Clay, for example, has a swell factor of 1.4. That means that if you remove 100 cubic meters of existing clay from a terrain, you will require 140 cubic meters of it to fill back the same hole.
-
----
 
 # Volume Calculation Method
 
@@ -99,17 +95,18 @@ The plane equation `z=f(x,y)` representing is obtained for each group of 3 disti
 1. Vector AB and BC are determined using each of their individual coordinates.
 2. The [cross product](https://en.wikipedia.org/wiki/Cross_product) AB x BC generates a perpendicular vector represented by numerical constants `(p,q,r)`.
 3. Finally the corresponding plane equation is given by:  
-> p*(x-xo) + q*(y-yo) + r*(z-zo) = 0
+> p*(x-xo) + q*(y-yo) + r*(z-zo) = 0  
+where `(xo,yo,zo)` can be any one of the 3 A, B or C points from the plane.
 
-where `(xo,yo,zo)` can be any one of the 3 A, B or C points from the plane.  
-![Picture of points ABC on triangular plane and orthogonal vector]()
+In the GIF below, the ABC triangle is represented by the blue points and the orthonormal vector `(p, q, r)` is represented by the blue line with an orange tip.
+
+![Triangle ABC and normal vector](images/TriangleABC_NormalVector.gif)
 
 ## Step 3: From triangles and planes to a sum of volumes
 Given the plane equation, we can isolate z and obtain a `z=f(x,y)` function on top of which the double integral is applied in order to calculate the volume beneath the triangular plane down until the plane perpendicular to the XY axis that passes by the lowest elevation coordinate (z) of the survey.  
 
 The volume of each individual triangle is obtained by the sum of 2 double integrals. So for a triangle with vertices ABC and its plane determined by `z=f(x,y)` the double integral limits for a single triangular area are determined as follows:  
 ![vol_triABC](images/Vol_triABC.jpg)  
-![gif image of rotating ABC triangle and annotations]()
 
 ## Extra pre-step: From GPS to Cartesian.
 In the event of the [terrain survey](###-Terrain-survey) being executed thru a GPS device (a quite common case) an extra step is required prior to applying the volume calculation: [map projection](https://en.wikipedia.org/wiki/Map_projection).
