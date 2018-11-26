@@ -119,7 +119,7 @@ test_cases = (
          CartesianCoordinate(5, 5, 20),
          CartesianCoordinate(10,15, 20),
          750.00)
-         
+
     ]
 )
 
@@ -153,4 +153,5 @@ def test_mesh_volume():
                     'sample',
                     coordinate_system=CoordinateSystem.CARTESIAN)
     mesh = TriangularMesh(survey.data)
-    assert mesh.get_volume() == pytest.approx(168.0, rel=0.01)
+    expected_volume = 168.0-(13.0*4.0*1.0)
+    assert mesh.get_volume() == pytest.approx(expected_volume, rel=0.01)

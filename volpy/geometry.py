@@ -115,17 +115,25 @@ class TriangularMesh(object):
         """
         self.point_cloud = point_cloud
         self.ref_level=ref_level
-        self.data = Delaunay(self.point_cloud[['x', 'y']]).simplices
 
-    def get_volume(self):
-        # consider implementing this with a level input.
+    def get_volume(self, data_points='Default'):
+        """
+        Returns the volume.
+
+        :param data_points: a subset of the point_cloud parameter that 
+        initializes with this class. The reason it is given as an input is to
+        reuse this get_volume method to calculate cut and fill volumes.
+        Defaults to the hole point_cloud if none is given.
+        """
+        if data_points == 'Default': data_points=self.point_cloud
+        data = Delaunay(data_points[['x', 'y']]).simplices
         mesh_volume = 0
         iteration = 0
-        data_amount = len(self.data)
+        data_amount = len(data)
         for i in range(data_amount):
-            A = self.point_cloud.iloc[self.data[i][0]]
-            B = self.point_cloud.iloc[self.data[i][1]]
-            C = self.point_cloud.iloc[self.data[i][2]]
+            A = data_points.iloc[data[i][0]]
+            B = data_points.iloc[data[i][1]]
+            C = data_points.iloc[data[i][2]]
             point_A = CartesianCoordinate(A['x'], A['y'], A['z'])
             point_B = CartesianCoordinate(B['x'], B['y'], B['z'])
             point_C = CartesianCoordinate(C['x'], C['y'], C['z'])

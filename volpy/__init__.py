@@ -1,8 +1,8 @@
 import sys
 sys.path.append('volpy/')  # because we are calling the package from root
 from coordinates import CoordinateSystem
-from geometry import TriangularMesh as terrain_mesh
 from survey import Survey as load_survey
+from geometry import TriangularMesh as terrain_mesh
 from plots import SurveyPlot as terrain_plots
 
 def demo():
