@@ -2,6 +2,7 @@ import numpy as np
 from sympy import symbols
 from sympy import integrate
 from scipy.spatial import Delaunay
+import pandas as pd
 
 from coordinates import CartesianCoordinate
 from utils import print_progress
@@ -108,13 +109,11 @@ class TriangularMesh(object):
     def __init__(self, point_cloud, ref_level=0.0):
         """
         :param point_cloud: a pandas dataframe containing x, y, z, elevation
-        :param ref_level: the base level for cut/fill volume calculations.
         :attr data: a numpy array representing the triangular mesh of points
                     generated using a Delaunay triangulation.
                     Not set by the user.
         """
         self.point_cloud = point_cloud
-        self.ref_level=ref_level
 
     def get_volume(self, data_points='Default'):
         """
@@ -125,7 +124,9 @@ class TriangularMesh(object):
         reuse this get_volume method to calculate cut and fill volumes.
         Defaults to the hole point_cloud if none is given.
         """
-        if data_points == 'Default': data_points=self.point_cloud
+        if type(data_points) is not pd.core.frame.DataFrame: 
+            data_points=self.point_cloud
+        
         data = Delaunay(data_points[['x', 'y']]).simplices
         mesh_volume = 0
         iteration = 0
@@ -149,8 +150,36 @@ class TriangularMesh(object):
                            length = 50)
         return mesh_volume
 
-    def get_cut_volume(self):
-        pass
+    def get_cut_volume(self, ref_level):
+        """
+        Returns the terrain fill volume, corresponding to the amount of volume
+        required to fill the terrain up to the ref_level
 
-    def get_fill_volume(self):
-        pass
+        :param ref_level: the reference level to be used. This is relative to
+        the lowest point available in z.
+        """
+        data_cut = self.point_cloud.copy(deep=True)
+        data_cut.loc[data_cut['z'] < ref_level, 'z'] = ref_level
+        return self.get_volume(data_cut)
+
+    def get_fill_volume(self, ref_level):
+        """
+        Returns the terrain fill volume, corresponding to the amount of volume
+        required to fill the terrain up to the ref_level
+
+        :param ref_level: the reference level to be used. This is relative to
+        the lowest point available in z.
+        """
+        data_fill = self.point_cloud.copy(deep=True)
+        data_fill.loc[data_fill['z'] >= ref_level, 'z'] = ref_level
+
+        data_flat = self.point_cloud.copy(deep=True)
+        data_flat['z'] = ref_level
+        
+        flat_volume = self.get_volume(data_flat)
+        bulky_fill_volume = self.get_volume(data_fill)
+        fill_volume = bulky_fill_volume - flat_volume
+        return fill_volume
+
+    # Create TEST CASES for cut and fill volumes. Keep in mind how you are
+    # flattening the projection to make sure the numbers match.
