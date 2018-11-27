@@ -114,6 +114,9 @@ class TriangularMesh(object):
                     Not set by the user.
         """
         self.point_cloud = point_cloud
+        self.flat_volume = {0.0: 0.0} # dictionary containing ref_level and 
+        # corresponding flat volume. Used by the cut and fill routines.
+        # Defined as an attribute to reduce the need to recalculate
 
     def get_volume(self, data_points='Default'):
         """
@@ -150,6 +153,14 @@ class TriangularMesh(object):
                            length = 50)
         return mesh_volume
 
+    def _get_flat_volume(self, ref_level):
+        """
+        Returns the volume of the flattened terrain given a reference
+        """
+        data_flat = self.point_cloud.copy(deep=True)
+        data_flat['z'] = ref_level
+        return self.get_volume(data_flat)
+
     def get_cut_volume(self, ref_level):
         """
         Returns the terrain fill volume, corresponding to the amount of volume
@@ -160,7 +171,8 @@ class TriangularMesh(object):
         """
         data_cut = self.point_cloud.copy(deep=True)
         data_cut.loc[data_cut['z'] < ref_level, 'z'] = ref_level
-        return self.get_volume(data_cut)
+        flat_volume = self._get_flat_volume(ref_level)
+        return self.get_volume(data_cut) -flat_volume
 
     def get_fill_volume(self, ref_level):
         """
@@ -172,14 +184,9 @@ class TriangularMesh(object):
         """
         data_fill = self.point_cloud.copy(deep=True)
         data_fill.loc[data_fill['z'] >= ref_level, 'z'] = ref_level
+        flat_volume = self._get_flat_volume(ref_level)
+        return flat_volume - self.get_volume(data_fill)
 
-        data_flat = self.point_cloud.copy(deep=True)
-        data_flat['z'] = ref_level
-        
-        flat_volume = self.get_volume(data_flat)
-        bulky_fill_volume = self.get_volume(data_fill)
-        fill_volume = bulky_fill_volume - flat_volume
-        return fill_volume
 
     # Create TEST CASES for cut and fill volumes. Keep in mind how you are
     # flattening the projection to make sure the numbers match.
