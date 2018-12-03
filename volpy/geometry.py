@@ -197,3 +197,18 @@ class TriangularMesh(object):
 
     # Create TEST CASES for cut and fill volumes. Keep in mind how you are
     # flattening the projection to make sure the numbers match.
+
+    def get_volume_curves(self, step=0.5, swell_factor=1.0):
+        """
+        Returns a pandas DataFrame representing containing the following 
+        columns:
+        1. ref_level
+        2. cut volume
+        3. fill_volume
+        This can be used to plot required cut/fill volumes to flatten the 
+        surveyed terrain at varing ref_levels.
+
+        :param step: the increase in ref_level at each iteration
+        :param swell_factor: 
+        """
+        return 1
