@@ -5,9 +5,9 @@ import plotly.offline as po
 import plotly.graph_objs as go
 from plotly import tools
 
-from geometry import TriangularMesh
-from coordinates import CartesianCoordinate
-from geometry import Triangle
+from .geometry import TriangularMesh
+from .coordinates import CartesianCoordinate
+from .geometry import Triangle
 
 
 class SurveyPlot():

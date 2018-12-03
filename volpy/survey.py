@@ -1,8 +1,8 @@
 import pandas as pd
 import os
 from xml.dom.minidom import parse
-from coordinates import CoordinateSystem
-from coordinates import UtmCoordinate
+from .coordinates import CoordinateSystem
+from .coordinates import UtmCoordinate
 
 
 class Survey():

@@ -1,14 +1,11 @@
-# Publish by:
-# python3 setup.py sdist bdist_wheel
-# twine upload dist/*
-
 from setuptools import setup, find_packages
 
 setup(
     name='volpy',
-    version='0.1.2dev',
+    version='0.1.6dev',
     packages=find_packages(),
     install_requires=['numpy',
+                      'scipy',
                       'pandas',
                       'utm',
                       'sympy',

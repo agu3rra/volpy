@@ -1,9 +1,7 @@
-import sys
-sys.path.append('volpy/')  # because we are calling the package from root
-from coordinates import CoordinateSystem
-from survey import Survey as load_survey
-from geometry import TriangularMesh as terrain_mesh
-from plots import SurveyPlot as terrain_plots
+from .coordinates import CoordinateSystem
+from .survey import Survey as load_survey
+from .geometry import TriangularMesh as terrain_mesh
+from .plots import SurveyPlot as terrain_plots
 
 def demo():
     """
@@ -12,7 +10,7 @@ def demo():
     Histogram and 2D Scatter and finally the Volume Curves.
     """
     print("Loading sample survey data...")
-    survey = load_survey('volpy/sample_data/survey_ibema_faxinal_Cartesian.csv',
+    survey = load_survey('sample_data/survey_ibema_faxinal_Cartesian.csv',
         'Ibema Faxinal')
     if survey is not None:
         print('Sample survey data loaded successfully.')

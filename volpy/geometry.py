@@ -4,8 +4,8 @@ from sympy import integrate
 from scipy.spatial import Delaunay
 import pandas as pd
 
-from coordinates import CartesianCoordinate
-from utils import print_progress
+from .coordinates import CartesianCoordinate
+from .utils import print_progress
 
 class Line2D():
     """A 2-Dimensional line"""
