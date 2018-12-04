@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='volpy',
-    version='0.1.6dev',
+    version='0.1.8dev',
     packages=find_packages(),
     install_requires=['numpy',
                       'scipy',
@@ -12,7 +12,7 @@ setup(
                       'plotly',],
 
     package_data={
-        'volpy': ['sample_data/*.csv', 'sample_data/*.gpx', 'sample_data/*.txt', ],
+        'volpy': ['sample_data/survey_ibema_faxinal_Cartesian.csv', ],
     },
 
     author='Andre Guerra',

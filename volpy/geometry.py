@@ -114,6 +114,7 @@ class TriangularMesh(object):
                     Not set by the user.
         """
         self.point_cloud = point_cloud
+        self.data = Delaunay(point_cloud[['x', 'y']]).simplices
         self._flat_volume = {0.0: 0.0} # dictionary containing ref_level and 
         # corresponding flat volume. Used by the cut and fill routines.
         # Defined as an attribute to reduce the need to recalculate

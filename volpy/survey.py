@@ -20,7 +20,7 @@ class Survey():
         """Initializes a survey object
 
         :param source: path to the file that contains the survey data.
-                       Accepted file types: .xlsx, .xls, .csv, .gpx
+                       Accepted file types: .txt, .csv, .gpx
         :param name: a meaningful name for this survey (str).
                      Default: 'Survey'
         :param coordinate_system: an enumeration based on available coordinate
