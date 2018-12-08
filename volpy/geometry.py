@@ -110,7 +110,7 @@ class Triangle():
 
 class TriangularMesh(object):
 
-    def __init__(self, point_cloud, ref_level=0.0):
+    def __init__(self, point_cloud):
         """
         :param point_cloud: a pandas dataframe containing x, y, z, elevation
         :attr data: a numpy array representing the triangular mesh of points
@@ -119,7 +119,7 @@ class TriangularMesh(object):
         """
         self.point_cloud = point_cloud
         self.data = Delaunay(point_cloud[['x', 'y']]).simplices
-        self._flat_volume = {0.0: 0.0} # dictionary containing ref_level and 
+        self._flat_volume = {0.0: 0.0} # dictionary containing ref_level and
         # corresponding flat volume. Used by the cut and fill routines.
         # Defined as an attribute to reduce the need to recalculate
         # CONSIDER CREATING additional dictionaries to allow faster performance on new calculations for the same point_cloud
@@ -129,16 +129,16 @@ class TriangularMesh(object):
         """
         Returns the volume.
 
-        :param data_points: (pandas DataFrame) a subset of the point_cloud 
-                            parameter that initializes with this class. The 
-                            reason it is given as an input is to reuse this 
+        :param data_points: (pandas DataFrame) a subset of the point_cloud
+                            parameter that initializes with this class. The
+                            reason it is given as an input is to reuse this
                             get_volume method to calculate cut and fill volumes.
                             (default) the hole point_cloud.
         :param show_progress: (bool) shows the progress bar when True.
         """
-        if type(data_points) is not pd.core.frame.DataFrame: 
+        if type(data_points) is not pd.core.frame.DataFrame:
             data_points=self.point_cloud
-        
+
         data = Delaunay(data_points[['x', 'y']]).simplices # I think I can remove this. Do it after done with the corresponding cut/fill unit tests.
         mesh_volume = 0
         iteration = 0
@@ -153,7 +153,7 @@ class TriangularMesh(object):
             triangle = Triangle(point_A, point_B, point_C)
             volume = triangle.get_volume()
             mesh_volume += volume
-            
+
             # update progress bar
             if show_progress:
                 iteration += 1
@@ -198,7 +198,7 @@ class TriangularMesh(object):
         the lowest point available in z.
         """
         if ref_level == 0.0: return 0.0 # quick exit when ref is 0.0.
-        
+
         data_fill = self.point_cloud.copy(deep=True)
         data_fill.loc[data_fill['z'] >= ref_level, 'z'] = ref_level
         if ref_level not in self._flat_volume.keys():
@@ -213,12 +213,12 @@ class TriangularMesh(object):
 
     def get_volume_curves(self, step=1.0):
         """
-        Returns a pandas DataFrame representing containing the following 
+        Returns a pandas DataFrame representing containing the following
         columns:
         1. ref_level
         2. cut volume
         3. fill_volume
-        This can be used to plot required cut/fill volumes to flatten the 
+        This can be used to plot required cut/fill volumes to flatten the
         surveyed terrain at varing ref_levels.
 
         :param step: the increase in ref_level at each iteration
@@ -256,7 +256,7 @@ class TriangularMesh(object):
         :param curves: (pandas DataFrame) a collection of volume curves data.
                        Expected columns: ref_level, cut, fill, swell_cut
         """
-        layout = go.Layout(title='Volume Curves', 
+        layout = go.Layout(title='Volume Curves',
                            autosize=True,
                            xaxis=dict(title='Reference level (meters)'),
                            yaxis=dict(title='Volume (cubic meters)'))
