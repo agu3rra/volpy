@@ -46,7 +46,7 @@ def demo():
         print("Generating volume curves...")
         start = datetime.datetime.now()
         print("Trianglular areas generated: {}".format(mesh.triangular_areas))
-        curves = mesh.get_volume_curves(step=2.0, swell_factor=1.4)
+        curves = mesh.get_volume_curves(step=1.0)
         finish = datetime.datetime.now()
         cputime = finish - start
         print("Computing time: {}".format(cputime))

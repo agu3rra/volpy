@@ -39,7 +39,10 @@ class SurveyPlot():
         return po.plot(figure, filename='3d_view.html')
 
     def contour(self):
-        layout = go.Layout(title='Terrain Contour', autosize=True)
+        layout = go.Layout(title='Terrain Contour',
+                           autosize=True,
+                           xaxis=dict(title='x position (meters)'),
+                           yaxis=dict(title='y position (meters)'))
         trace = go.Contour(x=self.survey.data.x,
                            y=self.survey.data.y,
                            z=self.survey.data.z)
@@ -97,7 +100,8 @@ class SurveyPlot():
         # Adjust for 3 different colors
         colors = {1: 'red',
                   2: 'yellow',
-                  3: 'blue'}
+                  3: 'blue',
+                  4: 'green'}
         current_color = 1
 
         triangular_mesh = TriangularMesh(self.survey.data)
@@ -123,7 +127,7 @@ class SurveyPlot():
 
             # Color control
             current_color += 1
-            if (current_color > 3):
+            if (current_color > 4):
                 current_color = 1
 
         figure = go.Figure(data=data)

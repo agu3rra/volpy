@@ -211,19 +211,17 @@ class TriangularMesh(object):
     # Create TEST CASES for cut and fill volumes. Keep in mind how you are
     # flattening the projection to make sure the numbers match.
 
-    def get_volume_curves(self, step=0.5, swell_factor=1.0):
+    def get_volume_curves(self, step=1.0):
         """
         Returns a pandas DataFrame representing containing the following 
         columns:
         1. ref_level
         2. cut volume
         3. fill_volume
-        4. swell_cut_volume
         This can be used to plot required cut/fill volumes to flatten the 
         surveyed terrain at varing ref_levels.
 
         :param step: the increase in ref_level at each iteration
-        :param swell_factor: 
         """
         z_max = self.point_cloud['z'].max()
         z_min = 0
@@ -240,8 +238,7 @@ class TriangularMesh(object):
         for ref_level in levels:
             cut = self.get_cut_volume(ref_level, show_progress=False)
             fill = self.get_fill_volume(ref_level, show_progress=False)
-            swell_cut = cut / swell_factor
-            curves.append([ref_level, cut, fill, swell_cut])
+            curves.append([ref_level, cut, fill])
             print_progress(iteration,
                            iterations,
                            prefix='Progress:',
@@ -249,7 +246,7 @@ class TriangularMesh(object):
                            length = 50)
             iteration += 1
 
-        columns = ['ref_level', 'cut', 'fill', 'swell_cut']
+        columns = ['ref_level', 'cut', 'fill']
         return pd.DataFrame(data=curves, columns=columns)
 
     def plot_curves(self, curves):
@@ -259,7 +256,10 @@ class TriangularMesh(object):
         :param curves: (pandas DataFrame) a collection of volume curves data.
                        Expected columns: ref_level, cut, fill, swell_cut
         """
-        layout = go.Layout(title='Volume Curves', autosize=True)
+        layout = go.Layout(title='Volume Curves', 
+                           autosize=True,
+                           xaxis=dict(title='Reference level (meters)'),
+                           yaxis=dict(title='Volume (cubic meters)'))
         def get_trace(volume, name):
             return go.Scatter(x=curves['ref_level'],
                               y=volume,
@@ -268,8 +268,7 @@ class TriangularMesh(object):
 
         trace_cut = get_trace(curves['cut'], 'cut')
         trace_fill = get_trace(curves['fill'], 'fill')
-        trace_swell_cut = get_trace(curves['swell_cut'], 'usable cut')
 
-        figure = go.Figure(data=[trace_cut, trace_fill, trace_swell_cut],
+        figure = go.Figure(data=[trace_cut, trace_fill],
                            layout=layout)
         return po.plot(figure, filename='volume_curves.html')
