@@ -9,3 +9,5 @@ Demo.ipynb
 build/
 dist/
 volpy.egg-info/
+*.html
+*.swp

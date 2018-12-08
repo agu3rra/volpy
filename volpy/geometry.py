@@ -123,6 +123,7 @@ class TriangularMesh(object):
         # corresponding flat volume. Used by the cut and fill routines.
         # Defined as an attribute to reduce the need to recalculate
         # CONSIDER CREATING additional dictionaries to allow faster performance on new calculations for the same point_cloud
+        self.triangular_areas = len(self.data)
 
     def get_volume(self, data_points='Default', show_progress=True):
         """
@@ -186,7 +187,7 @@ class TriangularMesh(object):
             self._get_flat_volume(ref_level)
         flat_volume = self._flat_volume[ref_level]
         full_cut = self.get_volume(data_cut, show_progress=show_progress)
-        return full_cut - flat_volume
+        return np.int64(full_cut - flat_volume)
 
     def get_fill_volume(self, ref_level, show_progress=True):
         """
@@ -204,7 +205,7 @@ class TriangularMesh(object):
             self._get_flat_volume(ref_level)
         flat_volume = self._flat_volume[ref_level]
         full_fill = self.get_volume(data_fill, show_progress=show_progress)
-        return flat_volume - full_fill
+        return np.int64(flat_volume - full_fill)
 
 
     # Create TEST CASES for cut and fill volumes. Keep in mind how you are
@@ -232,6 +233,10 @@ class TriangularMesh(object):
         iteration = 0
         curves = []
 
+        integrals = self.triangular_areas * 3 * iterations
+        print("Please hold while I calculate {} double integrals.".format(
+            integrals))
+
         for ref_level in levels:
             cut = self.get_cut_volume(ref_level, show_progress=False)
             fill = self.get_fill_volume(ref_level, show_progress=False)
@@ -256,14 +261,14 @@ class TriangularMesh(object):
         """
         layout = go.Layout(title='Volume Curves', autosize=True)
         def get_trace(volume, name):
-            return go.Scatter(x=curves.ref_level,
+            return go.Scatter(x=curves['ref_level'],
                               y=volume,
                               mode='lines',
                               name=name)
 
-        trace_cut = get_trace(curves.cut, 'cut')
-        trace_fill = get_trace(curves.fill, 'fill')
-        trace_swell_cut = get_trace(curves.swell_cut, 'usable cut')
+        trace_cut = get_trace(curves['cut'], 'cut')
+        trace_fill = get_trace(curves['fill'], 'fill')
+        trace_swell_cut = get_trace(curves['swell_cut'], 'usable cut')
 
         figure = go.Figure(data=[trace_cut, trace_fill, trace_swell_cut],
                            layout=layout)

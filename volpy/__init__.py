@@ -1,11 +1,15 @@
+import datetime
 from pkg_resources import resource_filename
 from .coordinates import CoordinateSystem
 from .survey import Survey as load_survey
 from .geometry import TriangularMesh as terrain_mesh
 from .plots import SurveyPlot as terrain_plots
+import pandas as pd
 
-import volpy as vp
 sample = resource_filename(__name__, 'sample_data/survey_ibema_faxinal_Cartesian.csv')
+#plots_directory = resource_filename(__name__, 'plots/')
+#curves_sample = resource_filename(__name__, 'sample_data/sample_curves.csv')
+# Idea, save DataFrame and impement method to output optimal volume
 
 def demo():
     """
@@ -28,7 +32,6 @@ def demo():
             survey.data['elevation'].count()))
         print("---")
         print("Generating survey plots...")
-        """"
         plots = terrain_plots(survey)
         plots.scatter3d()
         plots.contour()
@@ -36,15 +39,19 @@ def demo():
         plots.mesh_plot()
         print('---')
         print('Calculating total terrain volume...')
-        """
         mesh = terrain_mesh(survey.data)
-        print("Generating volume curves...")
-        curves = mesh.get_volume_curves()
-        print(curves)
-        mesh.plot_curves(curves)
-        """"
         volume = mesh.get_volume()
         print("Total volume: {:.2f} cubic meters".format(volume))
-        """
+        print('---')
+        print("Generating volume curves...")
+        start = datetime.datetime.now()
+        print("Trianglular areas generated: {}".format(mesh.triangular_areas))
+        curves = mesh.get_volume_curves(step=2.0, swell_factor=1.4)
+        finish = datetime.datetime.now()
+        cputime = finish - start
+        print("Computing time: {}".format(cputime))
+        print("Volume curves DataFrame:")
+        print(curves)
+        mesh.plot_curves(curves)
     else:
         print('Error while loading sample survey data.')
