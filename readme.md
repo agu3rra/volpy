@@ -45,7 +45,7 @@ mesh.plot_curves(vol_curves)
 By default, volpy applies its calculations on a [Cartesian Coordinate System](https://en.wikipedia.org/wiki/Cartesian_coordinate_system). If you are working with survey data obtained from a [GPS](https://en.wikipedia.org/wiki/Global_Positioning_System), its points are likely represented in a [Geographic Coordinate System](https://en.wikipedia.org/wiki/Geographic_coordinate_system). In order to convert it, use the following modifier when loading the data.
 
 ```Python
->>> vp.load_survey('survey_data.csv', coordinates=vp.Coordinates.GPS)
+>>> survey = vp.load_survey('survey_data.csv', coordinates=vp.CoordinateSystem.GEOGRAPHIC)
 ```
 
 # Key Definitions
