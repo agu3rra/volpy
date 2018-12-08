@@ -15,7 +15,7 @@ Its main goal is to provide sufficiently accurate volume estimates out of terrai
 
 ![3D Terrain survey sample](images/3d_view.gif)
 
-![Volume Curves](images/curves.jpg)
+![Volume Curves Graph](images/Curves.jpg)
 
 # Installation
 ```bash
