@@ -45,14 +45,14 @@ plots.scatter3d()
 plots.contour()
 plots.profile()
 plots.mesh_plot()
-mesh.ref_level = 5.5
 ### The above statements are already working.
-mesh.cut_volume()
+mesh.get_cut_volume()
 > '11503.23 cubic meters'
-mesh.fill_volume()
+mesh.get_fill_volume()
 > '15321.41 cubic meters'
-mesh.swell_factor = 1.5
-mesh.volume_curves(step=0.5) # generates a graphic of Cut/fill from the base level to the highest using level steps of 0.5 meters
+mesh.get_volume_curves(step=0.5, swell_factor=1.4) # generates a graphic of Cut/fill from the base level to the highest using level steps of 0.5 meters
+
+# DataFrame printout
 ```
 
 By default, volpy applies its calculations on a [Cartesian Coordinate System](https://en.wikipedia.org/wiki/Cartesian_coordinate_system). If you are working with survey data obtained from a [GPS](https://en.wikipedia.org/wiki/Global_Positioning_System), its points are likely represented in a [Geographic Coordinate System](https://en.wikipedia.org/wiki/Geographic_coordinate_system). In order to convert it, use the following modifier when loading the data.

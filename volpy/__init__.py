@@ -28,6 +28,7 @@ def demo():
             survey.data['elevation'].count()))
         print("---")
         print("Generating survey plots...")
+        """"
         plots = terrain_plots(survey)
         plots.scatter3d()
         plots.contour()
@@ -35,8 +36,15 @@ def demo():
         plots.mesh_plot()
         print('---')
         print('Calculating total terrain volume...')
+        """
         mesh = terrain_mesh(survey.data)
+        print("Generating volume curves...")
+        curves = mesh.get_volume_curves()
+        print(curves)
+        mesh.plot_curves(curves)
+        """"
         volume = mesh.get_volume()
         print("Total volume: {:.2f} cubic meters".format(volume))
+        """
     else:
         print('Error while loading sample survey data.')

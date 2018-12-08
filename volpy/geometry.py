@@ -3,6 +3,10 @@ from sympy import symbols
 from sympy import integrate
 from scipy.spatial import Delaunay
 import pandas as pd
+import plotly
+import plotly.offline as po
+import plotly.graph_objs as go
+from plotly import tools
 
 from .coordinates import CartesianCoordinate
 from .utils import print_progress
@@ -120,19 +124,21 @@ class TriangularMesh(object):
         # Defined as an attribute to reduce the need to recalculate
         # CONSIDER CREATING additional dictionaries to allow faster performance on new calculations for the same point_cloud
 
-    def get_volume(self, data_points='Default'):
+    def get_volume(self, data_points='Default', show_progress=True):
         """
         Returns the volume.
 
-        :param data_points: a subset of the point_cloud parameter that 
-        initializes with this class. The reason it is given as an input is to
-        reuse this get_volume method to calculate cut and fill volumes.
-        Defaults to the hole point_cloud if none is given.
+        :param data_points: (pandas DataFrame) a subset of the point_cloud 
+                            parameter that initializes with this class. The 
+                            reason it is given as an input is to reuse this 
+                            get_volume method to calculate cut and fill volumes.
+                            (default) the hole point_cloud.
+        :param show_progress: (bool) shows the progress bar when True.
         """
         if type(data_points) is not pd.core.frame.DataFrame: 
             data_points=self.point_cloud
         
-        data = Delaunay(data_points[['x', 'y']]).simplices
+        data = Delaunay(data_points[['x', 'y']]).simplices # I think I can remove this. Do it after done with the corresponding cut/fill unit tests.
         mesh_volume = 0
         iteration = 0
         data_amount = len(data)
@@ -146,13 +152,15 @@ class TriangularMesh(object):
             triangle = Triangle(point_A, point_B, point_C)
             volume = triangle.get_volume()
             mesh_volume += volume
+            
             # update progress bar
-            iteration += 1
-            print_progress(iteration,
-                           data_amount,
-                           prefix='Progress:',
-                           suffix='Complete',
-                           length = 50)
+            if show_progress:
+                iteration += 1
+                print_progress(iteration,
+                            data_amount,
+                            prefix='Progress:',
+                            suffix='Complete',
+                            length = 50)
         return mesh_volume
 
     def _get_flat_volume(self, ref_level):
@@ -161,9 +169,10 @@ class TriangularMesh(object):
         """
         data_flat = self.point_cloud.copy(deep=True)
         data_flat['z'] = ref_level
-        self._flat_volume[ref_level] = self.get_volume(data_flat)
+        self._flat_volume[ref_level] = self.get_volume(
+            data_flat, show_progress=False)
 
-    def get_cut_volume(self, ref_level):
+    def get_cut_volume(self, ref_level, show_progress=True):
         """
         Returns the terrain fill volume, corresponding to the amount of volume
         required to fill the terrain up to the ref_level
@@ -176,9 +185,10 @@ class TriangularMesh(object):
         if ref_level not in self._flat_volume.keys():
             self._get_flat_volume(ref_level)
         flat_volume = self._flat_volume[ref_level]
-        return self.get_volume(data_cut) - flat_volume
+        full_cut = self.get_volume(data_cut, show_progress=show_progress)
+        return full_cut - flat_volume
 
-    def get_fill_volume(self, ref_level):
+    def get_fill_volume(self, ref_level, show_progress=True):
         """
         Returns the terrain fill volume, corresponding to the amount of volume
         required to fill the terrain up to the ref_level
@@ -193,7 +203,8 @@ class TriangularMesh(object):
         if ref_level not in self._flat_volume.keys():
             self._get_flat_volume(ref_level)
         flat_volume = self._flat_volume[ref_level]
-        return flat_volume - self.get_volume(data_fill)
+        full_fill = self.get_volume(data_fill, show_progress=show_progress)
+        return flat_volume - full_fill
 
 
     # Create TEST CASES for cut and fill volumes. Keep in mind how you are
@@ -206,10 +217,54 @@ class TriangularMesh(object):
         1. ref_level
         2. cut volume
         3. fill_volume
+        4. swell_cut_volume
         This can be used to plot required cut/fill volumes to flatten the 
         surveyed terrain at varing ref_levels.
 
         :param step: the increase in ref_level at each iteration
         :param swell_factor: 
         """
-        return 1
+        z_max = self.point_cloud['z'].max()
+        z_min = 0
+        levels = np.arange(z_min, z_max, step)
+
+        iterations = len(levels)-1
+        iteration = 0
+        curves = []
+
+        for ref_level in levels:
+            cut = self.get_cut_volume(ref_level, show_progress=False)
+            fill = self.get_fill_volume(ref_level, show_progress=False)
+            swell_cut = cut / swell_factor
+            curves.append([ref_level, cut, fill, swell_cut])
+            print_progress(iteration,
+                           iterations,
+                           prefix='Progress:',
+                           suffix='Complete',
+                           length = 50)
+            iteration += 1
+
+        columns = ['ref_level', 'cut', 'fill', 'swell_cut']
+        return pd.DataFrame(data=curves, columns=columns)
+
+    def plot_curves(self, curves):
+        """
+        Plots a 2D graph with the volume curves.
+
+        :param curves: (pandas DataFrame) a collection of volume curves data.
+                       Expected columns: ref_level, cut, fill, swell_cut
+        """
+        layout = go.Layout(title='Volume Curves', autosize=True)
+        def get_trace(volume, name):
+            return go.Scatter(x=curves.ref_level,
+                              y=volume,
+                              mode='lines',
+                              name=name)
+
+        trace_cut = get_trace(curves.cut, 'cut')
+        trace_fill = get_trace(curves.fill, 'fill')
+        trace_swell_cut = get_trace(curves.swell_cut, 'usable cut')
+
+        figure = go.Figure(data=[trace_cut, trace_fill, trace_swell_cut],
+                           layout=layout)
+        return po.plot(figure, filename='volume_curves.html')
