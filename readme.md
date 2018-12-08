@@ -15,6 +15,8 @@ Its main goal is to provide sufficiently accurate volume estimates out of terrai
 
 ![3D Terrain survey sample](images/3d_view.gif)
 
+![Volume Curves](images/curves.jpg)
+
 # Installation
 ```bash
 $ pip install volpy
