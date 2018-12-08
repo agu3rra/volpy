@@ -2,12 +2,10 @@
 # python -m pytest --verbose
 import pytest
 import pandas as pd
-import sys
-sys.path.append('../')
 
-from survey import Survey
-from coordinates import CoordinateSystem
-sample_directory = '../sample_data/'
+from .survey import Survey
+from .coordinates import CoordinateSystem
+sample_directory = 'sample_data/'
 
 # Successful import tests
 test_cases = (('source', 'entries', 'expected', 'coordinate_system'),

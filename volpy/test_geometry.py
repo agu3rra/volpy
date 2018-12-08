@@ -2,15 +2,12 @@ import pytest
 import numpy as np
 from sympy import symbols
 
-import sys
-sys.path.append('../')
-
-from coordinates import CartesianCoordinate
-from coordinates import CoordinateSystem
-from geometry import Line2D
-from geometry import Triangle
-from geometry import TriangularMesh
-from survey import Survey
+from .coordinates import CartesianCoordinate
+from .coordinates import CoordinateSystem
+from .geometry import Line2D
+from .geometry import Triangle
+from .geometry import TriangularMesh
+from .survey import Survey
 
 """
 Test Line2D correctly represents a line. Cases below were calculated manually.
@@ -148,7 +145,7 @@ def test_cartesian_sorting(point_A, point_B):
 
 """Test Mesh Volume"""
 def test_mesh_volume():
-    source = '../sample_data/survey_delaunay_Cartesian.csv'
+    source = 'sample_data/survey_delaunay_Cartesian.csv'
     survey = Survey(source,
                     'sample',
                     coordinate_system=CoordinateSystem.CARTESIAN)
