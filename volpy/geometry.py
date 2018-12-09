@@ -231,7 +231,7 @@ class TriangularMesh(object):
         iteration = 0
         curves = []
 
-        integrals = self.triangular_areas * 3 * iterations
+        integrals = self.triangular_areas * 3 * 2 * iterations
         print("Please hold while I calculate {} double integrals.".format(
             integrals))
 
