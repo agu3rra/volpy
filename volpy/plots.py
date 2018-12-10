@@ -131,4 +131,11 @@ class SurveyPlot():
                 current_color = 1
 
         figure = go.Figure(data=data)
+        layout = go.Layout(title='Terrain Mesh',
+                           autosize=True,
+                           xaxis=dict(title='x position (meters)'),
+                           yaxis=dict(title='y position (meters)'))
+        figure['layout'].update(title='Top Terrain Mesh View',
+                                xaxis=dict(title='x position (meters)'),
+                                yaxis=dict(title='y position (meters)'))
         return po.plot(figure, filename='mesh.html')
