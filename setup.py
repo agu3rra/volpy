@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='volpy',
-    version='18.12.2',
+    version='18.12.4',
     packages=find_packages(),
     install_requires=['numpy',
                       'scipy',

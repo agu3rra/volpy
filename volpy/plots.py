@@ -23,6 +23,9 @@ class SurveyPlot():
         self.survey = survey
 
     def scatter3d(self):
+        """
+        Plots an interactive 3D view of the surveyed terrain.
+        """
         layout = go.Layout(title='Terrain Point Cloud', autosize=True)
         trace = go.Scatter3d(x=self.survey.data.x,
                              y=self.survey.data.y,
@@ -39,6 +42,9 @@ class SurveyPlot():
         return po.plot(figure, filename='3d_view.html')
 
     def contour(self):
+        """
+        Plots a contour of the surveyed terrain.
+        """
         layout = go.Layout(title='Terrain Contour',
                            autosize=True,
                            xaxis=dict(title='x position (meters)'),
@@ -70,6 +76,10 @@ class SurveyPlot():
                             marker=dict(color='#ffb800'))
 
     def profile(self):
+        """
+        Plots a sequence of terrain profiles and histogram of points collected
+        grouped by elevation.
+        """
         figure = tools.make_subplots(rows=2,
                                      cols=2,
                                      subplot_titles=('Survey points collected',
@@ -131,10 +141,6 @@ class SurveyPlot():
                 current_color = 1
 
         figure = go.Figure(data=data)
-        layout = go.Layout(title='Terrain Mesh',
-                           autosize=True,
-                           xaxis=dict(title='x position (meters)'),
-                           yaxis=dict(title='y position (meters)'))
         figure['layout'].update(title='Top Terrain Mesh View',
                                 xaxis=dict(title='x position (meters)'),
                                 yaxis=dict(title='y position (meters)'))
