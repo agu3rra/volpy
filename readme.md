@@ -29,10 +29,10 @@ vp.demo()
 ```Python
 import volpy as vp
 survey = vp.load_survey('survey_data.csv')
-mesh = vp.terrain_mesh(survey)
+mesh = vp.terrain_mesh(survey.data)
 survey.get_bounds()
 > 'x=250.13, y=402.14, z=11.54'
-### Survey plots
+# Survey plots
 plots = vp.terrain_plots(survey)
 plots.scatter3d()
 plots.contour()
@@ -40,6 +40,9 @@ plots.profile()
 plots.mesh_plot()
 vol_curves = mesh.get_volume_curves(step=1.0)
 mesh.plot_curves(vol_curves)
+
+# Just a volume from the mesh
+mesh.get_volume()
 ```
 
 By default, volpy applies its calculations on a [Cartesian Coordinate System](https://en.wikipedia.org/wiki/Cartesian_coordinate_system). If you are working with survey data obtained from a [GPS](https://en.wikipedia.org/wiki/Global_Positioning_System), its points are likely represented in a [Geographic Coordinate System](https://en.wikipedia.org/wiki/Geographic_coordinate_system). In order to convert it, use the following modifier when loading the data.
