@@ -2,14 +2,14 @@ from setuptools import setup, find_packages
 
 setup(
     name='volpy',
-    version='18.12.4',
+    version='19.8.1',
     packages=find_packages(),
-    install_requires=['numpy',
-                      'scipy',
-                      'pandas',
-                      'utm',
-                      'sympy',
-                      'plotly',],
+    install_requires=['numpy==1.17.0',
+                      'scipy==1.3.1',
+                      'pandas==0.25.0',
+                      'utm==0.5.0',
+                      'sympy==1.4',
+                      'plotly==4.1.0',],
 
     package_data={
         'volpy': ['sample_data/survey_ibema_faxinal_Cartesian.csv', ],
