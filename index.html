@@ -388,6 +388,8 @@
 
 <iframe width=700, height=500 frameBorder=0 src="img/profile.html"></iframe>
 
+<iframe width=700, height=500 frameBorder=0 src="img/volume_curves.html"></iframe>
+
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>$ pip install volpy
 </code></pre></div>
@@ -414,7 +416,10 @@
 <span class="n">mesh</span><span class="o">.</span><span class="n">get_volume</span><span class="p">()</span>
 </code></pre></div>
 <p>By default, volpy applies its calculations on a <a href="https://en.wikipedia.org/wiki/Cartesian_coordinate_system">Cartesian Coordinate System</a>. If you are working with survey data obtained from a <a href="https://en.wikipedia.org/wiki/Global_Positioning_System">GPS</a>, its points are likely represented in a <a href="https://en.wikipedia.org/wiki/Geographic_coordinate_system">Geographic Coordinate System</a>. In order to convert it, use the following modifier when loading the data.</p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">survey</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">load_survey</span><span class="p">(</span><span class="s1">&#39;survey_data.csv&#39;</span><span class="p">,</span> <span class="n">coordinates</span><span class="o">=</span><span class="n">vp</span><span class="o">.</span><span class="n">CoordinateSystem</span><span class="o">.</span><span class="n">GEOGRAPHIC</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">survey</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">load_survey</span><span class="p">(</span>
+    <span class="s1">&#39;survey_data.csv&#39;</span><span class="p">,</span>
+    <span class="n">coordinates</span><span class="o">=</span><span class="n">vp</span><span class="o">.</span><span class="n">CoordinateSystem</span><span class="o">.</span><span class="n">GEOGRAPHIC</span>
+<span class="p">)</span>
 </code></pre></div>
                 
                   
