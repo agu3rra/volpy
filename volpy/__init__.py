@@ -1,15 +1,24 @@
 import datetime
-from pkg_resources import resource_filename
-from .coordinates import CoordinateSystem
-from .survey import Survey as load_survey
-from .geometry import TriangularMesh as terrain_mesh
-from .plots import SurveyPlot as terrain_plots
 import pandas as pd
-
+from pkg_resources import resource_filename
 sample = resource_filename(__name__, 'sample_data/survey_ibema_faxinal_Cartesian.csv')
-#plots_directory = resource_filename(__name__, 'plots/')
-#curves_sample = resource_filename(__name__, 'sample_data/sample_curves.csv')
-# Idea, save DataFrame and impement method to output optimal volume
+
+from .coordinates import (
+    CartesianCoordinate,
+    CoordinateSystem,
+)
+from .geometry import (
+    Line2D,
+    Triangle,
+    TriangularMesh,
+    TriangularMesh as terrain_mesh,
+)
+from .survey import (
+    Survey,
+    Survey as load_survey,
+)
+from .plots import SurveyPlot as terrain_plots
+
 
 def demo():
     """

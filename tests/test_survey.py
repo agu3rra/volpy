@@ -3,9 +3,10 @@
 import pytest
 import pandas as pd
 
-from .survey import Survey
-from .coordinates import CoordinateSystem
-sample_directory = 'sample_data/'
+from volpy import Survey
+from volpy import CoordinateSystem
+sample_directory = '../volpy/sample_data/'
+
 
 # Successful import tests
 test_cases = (('source', 'entries', 'expected', 'coordinate_system'),

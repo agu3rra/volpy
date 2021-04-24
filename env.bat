@@ -1,0 +1,1 @@
+set PYTHONPATH=C:\Users\agu3r\dev\volpy
