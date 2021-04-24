@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from xml.dom.minidom import parse
+from defusedxml.ElementTree import parse
 from .coordinates import CoordinateSystem
 from .coordinates import UtmCoordinate
 
@@ -84,18 +84,15 @@ class Survey():
         """
 
         # Parsing XML file
-        collection = parse(self.source).documentElement
-        track_points = collection.getElementsByTagName("trkpt")
-        if len(track_points) == 0:
-            raise ValueError("Unexpected trackpoint tag on XML file")
+        elements = parse(self.source)
         points = []
+        for element in elements.iter():
+            if element.tag.find("trkpt") == -1:
+                continue
 
-        for point in track_points:
-            # Parse from XML
-            latitude = point.getAttribute("lat")
-            longitude = point.getAttribute("lon")
-            elevation = point.getElementsByTagName('ele')[0]\
-                .childNodes[0].data
+            latitude = element.attrib.get("lat", None)
+            longitude = element.attrib.get("lon", None)
+            elevation = element[0].text
 
             if (not latitude or
                 not longitude or
@@ -118,6 +115,9 @@ class Survey():
                 points.append(entry)
             except Exception as exception:
                 raise exception
+
+        if len(points) == 0:
+            raise(ValueError("Unable to find valid points within the provided GPX file."))
 
         # Generate DataFrame
         columns = ['latitude',

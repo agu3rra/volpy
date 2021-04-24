@@ -1,0 +1,52 @@
+site_name: 'Volume Calculations for Digital Elevation Models in Python (volpy)'
+site_author: 'Andre Guerra'
+site_url: 'https://github.com/agu3rra/volpy'
+
+repo_name: 'GitHub'
+repo_url: 'https://github.com/agu3rra/volpy'
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+nav:
+  - Home: index.md
+  - Methodology: methodology.md
+
+markdown_extensions:
+  - pymdownx.magiclink
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.tabbed
+  - pymdownx.caret
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.superfences
+  - admonition
+  - attr_list
+  - footnotes
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - git-revision-date-localized
+
+extra_javascript:
+  - javascripts/config.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
