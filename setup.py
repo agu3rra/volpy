@@ -9,7 +9,8 @@ setup(
                       'pandas==1.2.4',
                       'utm==0.7.0',
                       'sympy==1.6.2',
-                      'plotly==4.14.3',],
+                      'plotly==4.14.3',
+                      'defusedxml==0.7.1'],
 
     package_data={
         'volpy': ['sample_data/survey_ibema_faxinal_Cartesian.csv', ],

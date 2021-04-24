@@ -4,3 +4,4 @@ plotly==4.14.3
 utm==0.7.0
 scipy==1.6.2
 sympy==1.8
+defusedxml==0.7.1
